@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 1.5.3
+ * @version 1.5.4
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -417,14 +417,29 @@ export default class Tabs {
   }
 
   #initialize(): void {
-    this.#eventController = new AbortController();
-    const { signal } = this.#eventController;
     saveAttributes(this.#listElements, [
       'aria-hidden',
       'aria-orientation',
       'role',
       'style',
     ]);
+    saveAttributes(this.#tabElements, [
+      'aria-controls',
+      'id',
+      'role',
+      'style',
+      'tabindex',
+    ]);
+    saveAttributes(this.#indicatorElements, ['style']);
+    saveAttributes(this.#panelElements, [
+      'aria-controls',
+      'aria-labelledby',
+      'id',
+      'role',
+      'tabindex',
+    ]);
+    this.#eventController = new AbortController();
+    const { signal } = this.#eventController;
 
     this.#listElements.forEach((list, i) => {
       this.#settings.avoidDuplicates &&
@@ -435,14 +450,6 @@ export default class Tabs {
       list.setAttribute('role', 'tablist');
     });
 
-    saveAttributes(this.#tabElements, [
-      'aria-controls',
-      'id',
-      'role',
-      'style',
-      'tabindex',
-    ]);
-
     this.#tabElements.forEach((tab, i) => {
       const id = Math.random().toString(36).slice(-8);
       const panel = this.#panelElements[i % this.#panelElements.length];
@@ -451,11 +458,6 @@ export default class Tabs {
         return;
       }
 
-      i < this.#panelElements.length &&
-        saveAttributes(
-          [panel],
-          ['aria-controls', 'aria-labelledby', 'id', 'role', 'tabindex'],
-        );
       panel.id ||= `tabs-panel-${id}`;
       addTokenToAttribute(tab, 'aria-controls', panel.id);
       !tab.hasAttribute('aria-selected') &&
@@ -473,8 +475,6 @@ export default class Tabs {
       tab.addEventListener('focus', this.#onTabFocus, { signal });
       this.#buttons.push(new Button(tab));
     });
-
-    saveAttributes(this.#indicatorElements, ['style']);
 
     this.#indicatorElements.forEach((indicator) => {
       indicator
