@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 1.5.4
+ * @version 1.5.5
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -595,22 +595,20 @@ export default class Tabs {
   }
 
   #onAnimationFinish(): void {
-    if (!this.#contentElement) {
-      return;
-    }
-
-    const { style } = this.#contentElement;
-    style.removeProperty('block-size');
-    style.removeProperty('overflow');
-    style.removeProperty('position');
+    ['block-size', 'overflow', 'position'].forEach((name) => {
+      this.#contentElement?.style.removeProperty(name);
+    });
 
     this.#panelElements.forEach((panel) => {
-      const { style } = panel;
-      style.removeProperty('content-visibility');
-      style.removeProperty('display');
-      style.removeProperty('inline-size');
-      style.removeProperty('opacity');
-      style.removeProperty('position');
+      [
+        'content-visibility',
+        'display',
+        'inline-size',
+        'opacity',
+        'position',
+      ].forEach((name) => {
+        panel.style.removeProperty(name);
+      });
     });
 
     this.#rootElement.removeAttribute('data-tabs-animating');
