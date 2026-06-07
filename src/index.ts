@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 1.5.5
+ * @version 1.5.6
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -226,7 +226,7 @@ export default class Tabs {
     const { style } = this.#contentElement;
     style.setProperty('overflow', 'clip');
     style.setProperty('position', 'relative');
-    const { fade, crossFade } = this.#settings.animation.content;
+    const { crossFade, fade } = this.#settings.animation.content;
     const panel = this.#bindings.get(tab)?.panel;
 
     if (!panel) {
@@ -236,7 +236,7 @@ export default class Tabs {
     this.#panelElements.forEach((p) => {
       const { style } = p;
 
-      if (fade || crossFade) {
+      if (crossFade || fade) {
         style.setProperty('content-visibility', 'visible');
         style.setProperty('display', 'block');
         style.setProperty('opacity', p.hidden ? '0' : '1');
@@ -326,7 +326,7 @@ export default class Tabs {
         },
         {
           duration:
-            isMatch || !(fade || crossFade)
+            isMatch || !(crossFade || fade)
               ? 0
               : this.#settings.animation.content.duration,
           easing: 'ease',
@@ -393,11 +393,7 @@ export default class Tabs {
     }
 
     this.#panelElements.forEach((panel) => {
-      const animation = this.#bindings.get(panel)?.animation;
-
-      if (animation) {
-        animation.cancel();
-      }
+      this.#bindings.get(panel)?.animation?.cancel();
     });
 
     this.#onAnimationFinish();
@@ -499,12 +495,10 @@ export default class Tabs {
     const options = { selector: this.#settings.selector.tab, wrap: true };
 
     this.#listElements.forEach((list) => {
-      if (list.ariaOrientation !== 'undefined') {
+      list.ariaOrientation !== 'undefined' &&
         Object.assign(options, {
           direction: this.#settings.vertical ? 'vertical' : 'horizontal',
         });
-      }
-
       this.#cleanupsRovingTabIndex.push(createRovingTabIndex(list, options));
 
       list
