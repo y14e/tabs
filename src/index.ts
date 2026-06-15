@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 1.5.7
+ * @version 1.5.8
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -100,7 +100,6 @@ export default class Tabs {
   #animationController: AbortController | null = null;
   #cleanupsRovingTabIndex: (() => void)[] = [];
   #animation: Animation | null = null;
-  #animationId = 0;
   #buttons: Button[] = [];
   #indicators: TabsIndicator[] = [];
   #isDestroyed = false;
@@ -265,10 +264,9 @@ export default class Tabs {
     });
 
     // content
-    const animationId = ++this.#animationId;
     this.#animation?.cancel();
     const { duration, easing } = this.#settings.animation.content;
-    this.#animation = this.#contentElement.animate(
+    const animation = this.#contentElement.animate(
       {
         blockSize: [
           `${size}px`,
@@ -280,9 +278,10 @@ export default class Tabs {
         easing: easing,
       },
     );
+    this.#animation = animation;
 
     const cleanup = (): void => {
-      if (animationId === this.#animationId) {
+      if (animation === this.#animation) {
         this.#animation = null;
       }
     };
@@ -297,10 +296,12 @@ export default class Tabs {
     this.#animation.addEventListener(
       'finish',
       () => {
-        if (animationId === this.#animationId) {
-          this.#onAnimationFinish();
-          cleanup();
+        if (this.#animation !== animation) {
+          return;
         }
+
+        this.#onAnimationFinish();
+        cleanup();
       },
       {
         once: true,
