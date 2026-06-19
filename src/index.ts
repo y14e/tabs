@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 1.5.8
+ * @version 1.5.9
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -254,12 +254,7 @@ export default class Tabs {
         p.removeAttribute('hidden');
       } else {
         const tab = this.#tabElements[i];
-
-        if (!tab) {
-          return;
-        }
-
-        p.setAttribute('hidden', isFocusable(tab) ? 'until-found' : '');
+        tab && p.setAttribute('hidden', isFocusable(tab) ? 'until-found' : '');
       }
     });
 
@@ -296,12 +291,10 @@ export default class Tabs {
     this.#animation.addEventListener(
       'finish',
       () => {
-        if (this.#animation !== animation) {
-          return;
+        if (this.#animation === animation) {
+          this.#onAnimationFinish();
+          cleanup();
         }
-
-        this.#onAnimationFinish();
-        cleanup();
       },
       {
         once: true,
@@ -552,12 +545,7 @@ export default class Tabs {
     }
 
     const tab = this.#bindings.get(panel)?.tabs[0];
-
-    if (!tab) {
-      return;
-    }
-
-    this.activate(tab, true);
+    tab && this.activate(tab, true);
   };
 
   #isAvoidedTab(tab: HTMLElement): boolean {
