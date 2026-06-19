@@ -258,7 +258,7 @@ export default class Tabs {
       }
     });
 
-    // content
+    // Content
     this.#animation?.cancel();
     const { duration, easing } = this.#settings.animation.content;
     const animation = this.#contentElement.animate(
@@ -302,7 +302,7 @@ export default class Tabs {
       },
     );
 
-    // panel
+    // Panel
     this.#panelElements.forEach((p) => {
       const binding = this.#bindings.get(p);
 
