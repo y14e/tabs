@@ -10,14 +10,14 @@ npm i @y14e/tabs
 
 ```ts
 // npm
-import Tabs from '@y14e/tabs@1.5.9';
+import Tabs from '@y14e/tabs@2.0.0';
 
 // CDNs
-import Tabs from 'https://esm.sh/@y14e/tabs@1.5.9';
+import Tabs from 'https://esm.sh/@y14e/tabs@2.0.0';
 // or
-import Tabs from 'https://cdn.jsdelivr.net/npm/@y14e/tabs@1.5.9/+esm';
+import Tabs from 'https://cdn.jsdelivr.net/npm/@y14e/tabs@2.0.0/+esm';
 // or
-import Tabs from 'https://esm.unpkg.com/@y14e/tabs@1.5.9';
+import Tabs from 'https://esm.unpkg.com/@y14e/tabs@2.0.0';
 ```
 
 ## Usage
@@ -39,7 +39,7 @@ interface TabsOptions {
       crossFade?: boolean;   // default: true
       duration?: number;     // ms (default: 300)
       easing?: string;       // <easing-function> (default: 'ease')
-      fade?: boolean;        // default: false
+      fade?: boolean;        // default: true
     };
     indicator?: {
       duration?: number;     // ms (default: 300)

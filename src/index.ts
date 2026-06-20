@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 1.5.9
+ * @version 2.0.0
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -71,7 +71,7 @@ export default class Tabs {
         crossFade: true,
         duration: 300,
         easing: 'ease',
-        fade: false,
+        fade: true,
       },
       indicator: {
         duration: 300,
@@ -236,7 +236,7 @@ export default class Tabs {
     this.#panelElements.forEach((p) => {
       const { style } = p;
 
-      if (crossFade || fade) {
+      if (fade) {
         style.setProperty('content-visibility', 'visible');
         style.setProperty('display', 'block');
         style.setProperty('opacity', p.hidden ? '0' : '1');
@@ -315,19 +315,18 @@ export default class Tabs {
       const isSelected = p === panel;
       const animation = p.animate(
         {
-          opacity: fade
-            ? isSelected
-              ? [opacity, opacity, '1']
-              : [opacity, '0', '0']
-            : isSelected
-              ? [opacity, '1']
-              : [opacity, '0'],
+          opacity:
+            crossFade || !fade
+              ? isSelected
+                ? [opacity, '1']
+                : [opacity, '0']
+              : isSelected
+                ? [opacity, opacity, '1']
+                : [opacity, '0', '0'],
         },
         {
           duration:
-            isMatch || !(crossFade || fade)
-              ? 0
-              : this.#settings.animation.content.duration,
+            isMatch || !fade ? 0 : this.#settings.animation.content.duration,
           easing: 'ease',
         },
       );
