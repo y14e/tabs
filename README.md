@@ -10,14 +10,14 @@ npm i @y14e/tabs
 
 ```ts
 // npm
-import Tabs from '@y14e/tabs@2.0.4';
+import Tabs from '@y14e/tabs';
 
 // CDNs
-import Tabs from 'https://esm.sh/@y14e/tabs@2.0.4';
+import Tabs from 'https://esm.sh/@y14e/tabs@2.0.5';
 // or
-import Tabs from 'https://cdn.jsdelivr.net/npm/@y14e/tabs@2.0.4/+esm';
+import Tabs from 'https://cdn.jsdelivr.net/npm/@y14e/tabs@2.0.5/+esm';
 // or
-import Tabs from 'https://esm.unpkg.com/@y14e/tabs@2.0.4';
+import Tabs from 'https://esm.unpkg.com/@y14e/tabs@2.0.5';
 ```
 
 ## Usage
