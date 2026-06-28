@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.0.3
+ * @version 2.0.4
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -186,7 +186,7 @@ export default class Tabs {
         return;
       }
 
-      const binding = createBinding(tabsByIndex, panel);
+      const binding = this.#createBinding(tabsByIndex, panel);
       this.#bindings.set(tab, binding);
       i < length && this.#bindings.set(panel, binding);
     });
@@ -244,7 +244,7 @@ export default class Tabs {
 
       style.setProperty('inline-size', '100%');
       style.setProperty('position', 'absolute');
-      p === panel && !hasFocusable(p)
+      p === panel && !this.#hasFocusable(p)
         ? p.setAttribute('tabindex', '0')
         : p.removeAttribute('tabindex');
     });
@@ -254,7 +254,8 @@ export default class Tabs {
         p.removeAttribute('hidden');
       } else {
         const tab = this.#tabElements[i];
-        tab && p.setAttribute('hidden', isFocusable(tab) ? 'until-found' : '');
+        tab &&
+          p.setAttribute('hidden', this.#isFocusable(tab) ? 'until-found' : '');
       }
     });
 
@@ -292,7 +293,7 @@ export default class Tabs {
       'finish',
       () => {
         if (this.#animation === animation) {
-          this.#onAnimationFinish();
+          this.#onContentAnimationFinish();
           cleanup();
         }
       },
@@ -394,7 +395,7 @@ export default class Tabs {
       this.#bindings.get(panel)?.animation?.cancel();
     });
 
-    this.#onAnimationFinish();
+    this.#onContentAnimationFinish();
     this.#animationController?.abort();
     this.#animationController = null;
     restoreAttributes([
@@ -463,7 +464,8 @@ export default class Tabs {
       }
 
       tab.setAttribute('role', 'tab');
-      !isFocusable(tab) && tab.style.setProperty('pointer-events', 'none');
+      !this.#isFocusable(tab) &&
+        tab.style.setProperty('pointer-events', 'none');
       addTokenToAttribute(panel, 'aria-labelledby', tab.id);
       tab.addEventListener('click', this.#onTabClick, { signal });
       tab.addEventListener('focus', this.#onTabFocus, { signal });
@@ -483,7 +485,7 @@ export default class Tabs {
     this.#panelElements.forEach((panel) => {
       panel.setAttribute('role', 'tabpanel');
       !panel.hasAttribute('hidden') &&
-        !hasFocusable(panel) &&
+        !this.#hasFocusable(panel) &&
         panel.setAttribute('tabindex', '0');
       panel.addEventListener('beforematch', this.#onPanelBeforeMatch, {
         signal,
@@ -536,6 +538,26 @@ export default class Tabs {
     this.#isAvoidedTab(tab) && tab.blur();
   };
 
+  #onContentAnimationFinish(): void {
+    ['block-size', 'overflow', 'position'].forEach((name) => {
+      this.#contentElement?.style.removeProperty(name);
+    });
+
+    this.#panelElements.forEach((panel) => {
+      [
+        'content-visibility',
+        'display',
+        'inline-size',
+        'opacity',
+        'position',
+      ].forEach((name) => {
+        panel.style.removeProperty(name);
+      });
+    });
+
+    this.#rootElement.removeAttribute('data-tabs-animating');
+  }
+
   #onPanelBeforeMatch = (event: Event): void => {
     const panel = event.currentTarget;
 
@@ -547,6 +569,18 @@ export default class Tabs {
     tab && this.activate(tab, true);
   };
 
+  #createBinding(tabs: HTMLElement[], panel: HTMLElement): Binding {
+    return { tabs, panel, animation: null };
+  }
+
+  #hasFocusable(container: HTMLElement): boolean {
+    return !![
+      ...container.querySelectorAll<HTMLElement>(
+        `:is(a[href], area[href], button, embed, iframe, input:not([type="hidden" i]), object, select, details > summary:first-of-type, textarea, [contenteditable]:not([contenteditable="false" i]), [controls], [tabindex]):not(:disabled, [hidden], [inert], [tabindex="-1"])`,
+      ),
+    ].filter((element) => element.checkVisibility()).length;
+  }
+
   #isAvoidedTab(tab: HTMLElement): boolean {
     const binding = this.#bindings.get(tab);
 
@@ -555,6 +589,10 @@ export default class Tabs {
     }
 
     return this.#settings.avoidDuplicates && binding.tabs.indexOf(tab) > 0;
+  }
+
+  #isFocusable(element: HTMLElement): boolean {
+    return !element.hasAttribute('disabled');
   }
 
   #mergeOptions(
@@ -580,27 +618,11 @@ export default class Tabs {
       },
     };
   }
-
-  #onAnimationFinish(): void {
-    ['block-size', 'overflow', 'position'].forEach((name) => {
-      this.#contentElement?.style.removeProperty(name);
-    });
-
-    this.#panelElements.forEach((panel) => {
-      [
-        'content-visibility',
-        'display',
-        'inline-size',
-        'opacity',
-        'position',
-      ].forEach((name) => {
-        panel.style.removeProperty(name);
-      });
-    });
-
-    this.#rootElement.removeAttribute('data-tabs-animating');
-  }
 }
+
+// -----------------------------------------------------------------------------
+// Indicator
+// -----------------------------------------------------------------------------
 
 class TabsIndicator {
   #rootElement: HTMLElement;
@@ -680,24 +702,4 @@ class TabsIndicator {
     this.#animation = null;
     this.#listElement = null;
   }
-}
-
-// -----------------------------------------------------------------------------
-// Utils
-// -----------------------------------------------------------------------------
-
-function createBinding(tabs: HTMLElement[], panel: HTMLElement): Binding {
-  return { tabs, panel, animation: null };
-}
-
-function hasFocusable(container: HTMLElement): boolean {
-  return !![
-    ...container.querySelectorAll<HTMLElement>(
-      `:is(a[href], area[href], button, embed, iframe, input:not([type="hidden" i]), object, select, details > summary:first-of-type, textarea, [contenteditable]:not([contenteditable="false" i]), [controls], [tabindex]):not(:disabled, [hidden], [inert], [tabindex="-1"])`,
-    ),
-  ].filter((element) => element.checkVisibility()).length;
-}
-
-function isFocusable(element: HTMLElement): boolean {
-  return !element.hasAttribute('disabled');
 }
