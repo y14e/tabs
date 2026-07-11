@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.0.5
+ * @version 2.0.6
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -20,35 +20,34 @@ import {
 } from '@y14e/attributes-utils';
 import Button from '@y14e/button';
 import { createRovingTabIndex } from '@y14e/roving-tabindex';
-import type { DeepRequired } from 'utility-types';
 
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------
 
 export interface TabsOptions {
-  readonly animation?: {
-    readonly content?: {
-      readonly crossFade?: boolean;
-      readonly duration?: number;
-      readonly easing?: string;
-      readonly fade?: boolean;
+  animation: {
+    content: {
+      crossFade: boolean;
+      duration: number;
+      easing: string;
+      fade: boolean;
     };
-    readonly indicator?: {
-      readonly duration?: number;
-      readonly easing?: string;
+    indicator: {
+      duration: number;
+      easing: string;
     };
   };
-  readonly avoidDuplicates?: boolean;
-  readonly manual?: boolean;
-  readonly selector?: {
-    readonly content?: string;
-    readonly indicator?: string;
-    readonly list?: string;
-    readonly panel?: string;
-    readonly tab?: string;
+  avoidDuplicates: boolean;
+  manual: boolean;
+  selector: {
+    content: string;
+    indicator: string;
+    list: string;
+    panel: string;
+    tab: string;
   };
-  readonly vertical?: boolean;
+  vertical: boolean;
 }
 
 type Binding = {
@@ -62,7 +61,7 @@ type Binding = {
 // -----------------------------------------------------------------------------
 
 export default class Tabs {
-  static defaults: TabsOptions = {};
+  static defaults: Partial<TabsOptions> = {};
 
   #rootElement!: HTMLElement;
   #defaults = {
@@ -89,7 +88,7 @@ export default class Tabs {
     },
     vertical: false,
   };
-  #settings!: DeepRequired<TabsOptions>;
+  #settings!: TabsOptions;
   #listElements!: HTMLElement[];
   #tabElements!: HTMLElement[];
   #indicatorElements!: HTMLElement[];
@@ -104,7 +103,7 @@ export default class Tabs {
   #indicators: TabsIndicator[] = [];
   #isDestroyed = false;
 
-  constructor(root: HTMLElement, options: TabsOptions = {}) {
+  constructor(root: HTMLElement, options: Partial<TabsOptions> = {}) {
     if (!(root instanceof HTMLElement)) {
       throw new TypeError('Invalid root element');
     }
@@ -596,9 +595,9 @@ export default class Tabs {
   }
 
   #mergeOptions(
-    target: DeepRequired<TabsOptions>,
-    source: TabsOptions,
-  ): DeepRequired<TabsOptions> {
+    target: TabsOptions,
+    source: Partial<TabsOptions>,
+  ): TabsOptions {
     return {
       ...target,
       ...source,
@@ -626,13 +625,13 @@ export default class Tabs {
 
 class TabsIndicator {
   #rootElement: HTMLElement;
-  #settings: DeepRequired<TabsOptions>;
+  #settings: TabsOptions;
   #listElement: HTMLElement | null = null;
   #animation: Animation | null = null;
   #resizeObserver: ResizeObserver | null = null;
   #mutationObserver: MutationObserver | null = null;
 
-  constructor(root: HTMLElement, settings: DeepRequired<TabsOptions>) {
+  constructor(root: HTMLElement, settings: TabsOptions) {
     this.#rootElement = root;
     this.#settings = settings;
     this.#listElement = root.closest(settings.selector.list);
