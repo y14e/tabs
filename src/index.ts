@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.0.6
+ * @version 2.0.7
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -224,7 +224,6 @@ export default class Tabs {
     this.#rootElement.setAttribute('data-tabs-animating', '');
     const { style } = this.#contentElement;
     style.setProperty('overflow', 'clip');
-    style.setProperty('position', 'relative');
     const { crossFade, fade } = this.#settings.animation.content;
     const panel = this.#bindings.get(tab)?.panel;
 
@@ -237,12 +236,9 @@ export default class Tabs {
 
       if (fade) {
         style.setProperty('content-visibility', 'visible');
-        style.setProperty('display', 'block');
         style.setProperty('opacity', p.hidden ? '0' : '1');
       }
 
-      style.setProperty('inline-size', '100%');
-      style.setProperty('position', 'absolute');
       p === panel && !this.#hasFocusable(p)
         ? p.setAttribute('tabindex', '0')
         : p.removeAttribute('tabindex');
@@ -403,6 +399,7 @@ export default class Tabs {
       ...this.#indicatorElements,
       ...this.#panelElements,
     ]);
+    this.#contentElement && restoreAttributes([this.#contentElement]);
     this.#listElements.length = 0;
     this.#tabElements.length = 0;
     this.#contentElement = null;
@@ -425,11 +422,13 @@ export default class Tabs {
       'tabindex',
     ]);
     saveAttributes(this.#indicatorElements, ['style']);
+    this.#contentElement && saveAttributes([this.#contentElement], ['style']);
     saveAttributes(this.#panelElements, [
       'aria-controls',
       'aria-labelledby',
       'id',
       'role',
+      'style',
       'tabindex',
     ]);
     this.#eventController = new AbortController();
@@ -481,8 +480,17 @@ export default class Tabs {
       this.#indicators.push(new TabsIndicator(indicator, this.#settings));
     });
 
+    if (!this.#contentElement) {
+      return;
+    }
+
+    const { style } = this.#contentElement;
+    style.setProperty('align-items', 'start');
+    style.setProperty('display', 'grid');
+
     this.#panelElements.forEach((panel) => {
       panel.setAttribute('role', 'tabpanel');
+      panel.style.setProperty('grid-area', '1 / 1');
       !panel.hasAttribute('hidden') &&
         !this.#hasFocusable(panel) &&
         panel.setAttribute('tabindex', '0');
@@ -538,18 +546,12 @@ export default class Tabs {
   };
 
   #onContentAnimationFinish(): void {
-    ['block-size', 'overflow', 'position'].forEach((name) => {
+    ['block-size', 'overflow'].forEach((name) => {
       this.#contentElement?.style.removeProperty(name);
     });
 
     this.#panelElements.forEach((panel) => {
-      [
-        'content-visibility',
-        'display',
-        'inline-size',
-        'opacity',
-        'position',
-      ].forEach((name) => {
+      ['content-visibility', 'opacity'].forEach((name) => {
         panel.style.removeProperty(name);
       });
     });
