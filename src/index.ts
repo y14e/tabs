@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.0.7
+ * @version 2.0.8
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -399,7 +399,7 @@ export default class Tabs {
       ...this.#indicatorElements,
       ...this.#panelElements,
     ]);
-    this.#contentElement && restoreAttributes([this.#contentElement]);
+    this.#contentElement && restoreAttributes(this.#contentElement);
     this.#listElements.length = 0;
     this.#tabElements.length = 0;
     this.#contentElement = null;
@@ -421,8 +421,8 @@ export default class Tabs {
       'style',
       'tabindex',
     ]);
-    saveAttributes(this.#indicatorElements, ['style']);
-    this.#contentElement && saveAttributes([this.#contentElement], ['style']);
+    saveAttributes(this.#indicatorElements, 'style');
+    this.#contentElement && saveAttributes(this.#contentElement, 'style');
     saveAttributes(this.#panelElements, [
       'aria-controls',
       'aria-labelledby',
