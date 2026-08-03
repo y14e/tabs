@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.0.8
+ * @version 2.0.9
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -671,13 +671,13 @@ class TabsIndicator {
       return;
     }
 
-    const { x: tabX, y: tabY, width, height } = tab.getBoundingClientRect();
-    const { x: listX, y: listY } = this.#listElement.getBoundingClientRect();
+    const tabRect = tab.getBoundingClientRect();
+    const listRect = this.#listElement.getBoundingClientRect();
     const { duration, easing } = this.#settings.animation.indicator;
     this.#animation = this.#rootElement.animate(
       {
-        [position]: `${isHorizontal ? tabX - listX : tabY - listY}px`,
-        [size]: `${isHorizontal ? width : height}px`,
+        [position]: `${isHorizontal ? tabRect.left - listRect.left : tabRect.top - listRect.top}px`,
+        [size]: `${isHorizontal ? tabRect.width : tabRect.height}px`,
       },
       { duration, easing, fill: 'forwards' },
     );
