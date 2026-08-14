@@ -10,14 +10,14 @@ npm i @y14e/tabs
 
 ```ts
 // npm
-import Tabs from '@y14e/tabs';
+import Tabs from "@y14e/tabs";
 
 // CDNs
-import Tabs from 'https://esm.sh/@y14e/tabs@2.0.9';
+import Tabs from "https://esm.sh/@y14e/tabs@2.0.10";
 // or
-import Tabs from 'https://cdn.jsdelivr.net/npm/@y14e/tabs@2.0.9/+esm';
+import Tabs from "https://cdn.jsdelivr.net/npm/@y14e/tabs@2.0.10/+esm";
 // or
-import Tabs from 'https://esm.unpkg.com/@y14e/tabs@2.0.9';
+import Tabs from "https://esm.unpkg.com/@y14e/tabs@2.0.10";
 ```
 
 ## Usage
@@ -36,26 +36,26 @@ new Tabs(root, options);
 interface TabsOptions {
   animation: {
     content: {
-      crossFade: boolean;   // default: true
-      duration: number;     // ms (default: 300)
-      easing: string;       // <easing-function> (default: 'ease')
-      fade: boolean;        // default: true
+      crossFade: boolean; // default: true
+      duration: number; // ms (default: 300)
+      easing: string; // <easing-function> (default: 'ease')
+      fade: boolean; // default: true
     };
     indicator: {
-      duration: number;     // ms (default: 300)
-      easing: string;       // <easing-function> (default: 'ease')
+      duration: number; // ms (default: 300)
+      easing: string; // <easing-function> (default: 'ease')
     };
   };
   avoidDuplicates: boolean; // default: false
-  manual: boolean;          // default: false
+  manual: boolean; // default: false
   selector: {
-    content: string;        // default: '[role="tablist"] + *'
-    indicator: string;      // default: '[data-tabs-indicator]'
-    list: string;           // default: '[role="tablist"]'
-    panel: string;          // default: '[role="tabpanel"]'
-    tab: string;            // default: '[role="tab"]'
+    content: string; // default: '[role="tablist"] + *'
+    indicator: string; // default: '[data-tabs-indicator]'
+    list: string; // default: '[role="tablist"]'
+    panel: string; // default: '[role="tabpanel"]'
+    tab: string; // default: '[role="tab"]'
   };
-  vertical: boolean;        // default: false
+  vertical: boolean; // default: false
 }
 ```
 
@@ -68,7 +68,7 @@ If `true`, only the first tab list remains interactive; subsequent duplicates ar
 Override the global default settings applied to all accordion instances.
 
 ```ts
-import Tabs from '@y14e/tabs';
+import Tabs from "@y14e/tabs";
 
 Tabs.defaults = {
   animation: {
@@ -76,7 +76,7 @@ Tabs.defaults = {
       crossFade: false,
       duration: 1000,
       fade: true,
-    }
+    },
   },
   manual: true,
 };

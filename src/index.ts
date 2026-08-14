@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.0.9
+ * @version 2.0.10
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -51,9 +51,9 @@ export interface TabsOptions {
 }
 
 type Binding = {
-  tabs: HTMLElement[];
-  panel: HTMLElement;
   animation: Animation | null;
+  panel: HTMLElement;
+  tabs: HTMLElement[];
 };
 
 // -----------------------------------------------------------------------------
@@ -571,7 +571,7 @@ export default class Tabs {
   };
 
   #createBinding(tabs: HTMLElement[], panel: HTMLElement): Binding {
-    return { tabs, panel, animation: null };
+    return { animation: null, panel, tabs };
   }
 
   #hasFocusable(container: HTMLElement): boolean {
