@@ -36,26 +36,26 @@ new Tabs(root, options);
 interface TabsOptions {
   animation: {
     content: {
-      crossFade: boolean; // default: true
-      duration: number; // ms (default: 300)
-      easing: string; // <easing-function> (default: 'ease')
-      fade: boolean; // default: true
+      crossFade: boolean;   // default: true
+      duration: number;     // ms (default: 300)
+      easing: string;       // <easing-function> (default: 'ease')
+      fade: boolean;        // default: true
     };
     indicator: {
-      duration: number; // ms (default: 300)
-      easing: string; // <easing-function> (default: 'ease')
+      duration: number;     // ms (default: 300)
+      easing: string;       // <easing-function> (default: 'ease')
     };
   };
   avoidDuplicates: boolean; // default: false
-  manual: boolean; // default: false
+  manual: boolean;          // default: false
   selector: {
-    content: string; // default: '[role="tablist"] + *'
-    indicator: string; // default: '[data-tabs-indicator]'
-    list: string; // default: '[role="tablist"]'
-    panel: string; // default: '[role="tabpanel"]'
-    tab: string; // default: '[role="tab"]'
+    content: string;        // default: '[role="tablist"] + *'
+    indicator: string;      // default: '[data-tabs-indicator]'
+    list: string;           // default: '[role="tablist"]'
+    panel: string;          // default: '[role="tabpanel"]'
+    tab: string;            // default: '[role="tab"]'
   };
-  vertical: boolean; // default: false
+  vertical: boolean;        // default: false
 }
 ```
 
