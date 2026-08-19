@@ -13,11 +13,11 @@ npm i @y14e/tabs
 import Tabs from "@y14e/tabs";
 
 // CDNs
-import Tabs from "https://esm.sh/@y14e/tabs@2.0.10";
+import Tabs from "https://esm.sh/@y14e/tabs@2.0.11";
 // or
-import Tabs from "https://cdn.jsdelivr.net/npm/@y14e/tabs@2.0.10/+esm";
+import Tabs from "https://cdn.jsdelivr.net/npm/@y14e/tabs@2.0.11/+esm";
 // or
-import Tabs from "https://esm.unpkg.com/@y14e/tabs@2.0.10";
+import Tabs from "https://esm.unpkg.com/@y14e/tabs@2.0.11";
 ```
 
 ## Usage
