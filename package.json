@@ -49,6 +49,9 @@
   "engines": {
     "node": ">=18"
   },
+  "allowScripts": {
+    "esbuild": true
+  },
   "dependencies": {
     "@y14e/attribute-util": "^2.0.1",
     "@y14e/button": "^1.0.7",
