@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.0.12
+ * @version 2.0.13
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -14,7 +14,7 @@
 // -----------------------------------------------------------------------------
 
 import * as util from '@y14e/attribute-util';
-import Button from '@y14e/button';
+import { Button } from '@y14e/button';
 import { createRovingTabIndex } from '@y14e/roving-tabindex';
 
 // -----------------------------------------------------------------------------
@@ -56,7 +56,7 @@ type Binding = {
 // APIs
 // -----------------------------------------------------------------------------
 
-export default class Tabs {
+export class Tabs {
   static defaults: Partial<TabsOptions> = {};
 
   #rootElement!: HTMLElement;

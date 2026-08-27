@@ -10,14 +10,14 @@ npm i @y14e/tabs
 
 ```ts
 // npm
-import Tabs from "@y14e/tabs";
+import { Tabs } from "@y14e/tabs";
 
 // CDNs
-import Tabs from "https://esm.sh/@y14e/tabs@2.0.12";
+import { Tabs } from "https://esm.sh/@y14e/tabs@2.0.13";
 // or
-import Tabs from "https://cdn.jsdelivr.net/npm/@y14e/tabs@2.0.12/+esm";
+import { Tabs } from "https://cdn.jsdelivr.net/npm/@y14e/tabs@2.0.13/+esm";
 // or
-import Tabs from "https://esm.unpkg.com/@y14e/tabs@2.0.12";
+import { Tabs } from "https://esm.unpkg.com/@y14e/tabs@2.0.13";
 ```
 
 ## Usage
@@ -68,7 +68,7 @@ If `true`, only the first tab list remains interactive; subsequent duplicates ar
 Override the global default settings applied to all accordion instances.
 
 ```ts
-import Tabs from "@y14e/tabs";
+import { Tabs } from "@y14e/tabs";
 
 Tabs.defaults = {
   animation: {
