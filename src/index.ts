@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.0.13
+ * @version 2.0.14
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -13,7 +13,7 @@
 // import
 // -----------------------------------------------------------------------------
 
-import * as util from '@y14e/attribute-util';
+import * as utils from '@y14e/attribute-utils';
 import { Button } from '@y14e/button';
 import { createRovingTabIndex } from '@y14e/roving-tabindex';
 
@@ -389,13 +389,13 @@ export class Tabs {
     this.#onContentAnimationFinish();
     this.#animationController?.abort();
     this.#animationController = null;
-    util.restoreAttributes([
+    utils.restoreAttributes([
       ...this.#listElements,
       ...this.#tabElements,
       ...this.#indicatorElements,
       ...this.#panelElements,
     ]);
-    this.#contentElement && util.restoreAttributes(this.#contentElement);
+    this.#contentElement && utils.restoreAttributes(this.#contentElement);
     this.#listElements.length = 0;
     this.#tabElements.length = 0;
     this.#contentElement = null;
@@ -404,22 +404,22 @@ export class Tabs {
   }
 
   #initialize(): void {
-    util.saveAttributes(this.#listElements, [
+    utils.saveAttributes(this.#listElements, [
       'aria-hidden',
       'aria-orientation',
       'role',
       'style',
     ]);
-    util.saveAttributes(this.#tabElements, [
+    utils.saveAttributes(this.#tabElements, [
       'aria-controls',
       'id',
       'role',
       'style',
       'tabindex',
     ]);
-    util.saveAttributes(this.#indicatorElements, 'style');
-    this.#contentElement && util.saveAttributes(this.#contentElement, 'style');
-    util.saveAttributes(this.#panelElements, [
+    utils.saveAttributes(this.#indicatorElements, 'style');
+    this.#contentElement && utils.saveAttributes(this.#contentElement, 'style');
+    utils.saveAttributes(this.#panelElements, [
       'aria-controls',
       'aria-labelledby',
       'id',
@@ -448,7 +448,7 @@ export class Tabs {
       }
 
       panel.id ||= `tabs-panel-${id}`;
-      util.addAttributeToken(tab, 'aria-controls', panel.id);
+      utils.addAttributeToken(tab, 'aria-controls', panel.id);
       !tab.hasAttribute('aria-selected') &&
         tab.setAttribute('aria-selected', 'false');
       const isAvoided = this.#isAvoidedTab(tab);
@@ -460,7 +460,7 @@ export class Tabs {
       tab.setAttribute('role', 'tab');
       !this.#isFocusable(tab) &&
         tab.style.setProperty('pointer-events', 'none');
-      util.addAttributeToken(panel, 'aria-labelledby', tab.id);
+      utils.addAttributeToken(panel, 'aria-labelledby', tab.id);
       tab.addEventListener('click', this.#onTabClick, { signal });
       tab.addEventListener('focus', this.#onTabFocus, { signal });
       this.#buttons.push(new Button(tab));
