@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.0.14
+ * @version 2.0.15
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -596,7 +596,7 @@ export class Tabs {
     target: TabsOptions,
     source: Partial<TabsOptions>,
   ): TabsOptions {
-    return {
+    const merged = {
       ...target,
       ...source,
       animation: {
@@ -614,6 +614,144 @@ export class Tabs {
         ...(source.selector ?? {}),
       },
     };
+    const animation = merged.animation;
+    const mergedContentAnimation = animation.content;
+    const defaultContentAnimation = this.#defaults.animation.content;
+
+    if (typeof mergedContentAnimation.crossFade !== 'boolean') {
+      const crossFade = defaultContentAnimation.crossFade;
+      console.warn(
+        `Invalid content animation crossFade option. Fallback: ${crossFade}.`,
+      );
+      mergedContentAnimation.crossFade = crossFade;
+    }
+
+    const contentDuration = mergedContentAnimation.duration;
+
+    if (typeof contentDuration !== 'number' || Number.isNaN(contentDuration)) {
+      const duration = defaultContentAnimation.duration;
+      console.warn(
+        `Invalid content animation duration. Fallback: ${duration} (ms).`,
+      );
+      mergedContentAnimation.duration = duration;
+    }
+
+    if (contentDuration < 0) {
+      console.warn('Invalid content animation duration. Fallback: 0 (ms).');
+      mergedContentAnimation.duration = 0;
+    }
+
+    if (
+      !CSS.supports('animation-timing-function', mergedContentAnimation.easing)
+    ) {
+      const easing = defaultContentAnimation.easing;
+      console.warn(`Invalid content animation easing. Fallback: '${easing}'.`);
+      mergedContentAnimation.easing = easing;
+    }
+
+    if (typeof mergedContentAnimation.fade !== 'boolean') {
+      const fade = defaultContentAnimation.fade;
+      console.warn(`Invalid content animation fade option. Fallback: ${fade}.`);
+      mergedContentAnimation.fade = fade;
+    }
+
+    const mergedIndicatorAnimation = animation.indicator;
+    const indicatorDuration = mergedIndicatorAnimation.duration;
+    const defaultIndicatorAnimation = this.#defaults.animation.indicator;
+
+    if (
+      typeof indicatorDuration !== 'number' ||
+      Number.isNaN(indicatorDuration)
+    ) {
+      const duration = defaultIndicatorAnimation.duration;
+      console.warn(
+        `Invalid indicator animation duration. Fallback: ${duration} (ms).`,
+      );
+      mergedIndicatorAnimation.duration = duration;
+    }
+
+    if (indicatorDuration < 0) {
+      console.warn('Invalid indicator animation duration. Fallback: 0 (ms).');
+      mergedIndicatorAnimation.duration = 0;
+    }
+
+    if (
+      !CSS.supports(
+        'animation-timing-function',
+        mergedIndicatorAnimation.easing,
+      )
+    ) {
+      const easing = defaultIndicatorAnimation.easing;
+      console.warn(
+        `Invalid indicator animation easing. Fallback: '${easing}'.`,
+      );
+      mergedIndicatorAnimation.easing = easing;
+    }
+
+    if (typeof merged.avoidDuplicates !== 'boolean') {
+      const avoidDuplicates = this.#defaults.avoidDuplicates;
+      console.warn(
+        `Invalid avoidDuplicates option. Fallback: ${avoidDuplicates}.`,
+      );
+      merged.avoidDuplicates = avoidDuplicates;
+    }
+
+    if (typeof merged.manual !== 'boolean') {
+      const manual = this.#defaults.manual;
+      console.warn(`Invalid manual option. Fallback: ${manual}.`);
+      merged.manual = manual;
+    }
+
+    const mergedSelector = merged.selector;
+    const defaultSelector = this.#defaults.selector;
+
+    try {
+      document.querySelector(mergedSelector.content);
+    } catch {
+      const content = defaultSelector.content;
+      console.warn(`Invalid content selector. Fallback: '${content}'.`);
+      mergedSelector.content = content;
+    }
+
+    try {
+      document.querySelector(mergedSelector.indicator);
+    } catch {
+      const indicator = defaultSelector.indicator;
+      console.warn(`Invalid indicator selector. Fallback: '${indicator}'.`);
+      mergedSelector.indicator = indicator;
+    }
+
+    try {
+      document.querySelector(mergedSelector.list);
+    } catch {
+      const list = defaultSelector.list;
+      console.warn(`Invalid list selector. Fallback: '${list}'.`);
+      mergedSelector.list = list;
+    }
+
+    try {
+      document.querySelector(mergedSelector.panel);
+    } catch {
+      const panel = defaultSelector.panel;
+      console.warn(`Invalid panel selector. Fallback: '${panel}'.`);
+      mergedSelector.panel = panel;
+    }
+
+    try {
+      document.querySelector(mergedSelector.tab);
+    } catch {
+      const tab = defaultSelector.tab;
+      console.warn(`Invalid tab selector. Fallback: '${tab}'.`);
+      mergedSelector.tab = tab;
+    }
+
+    if (typeof merged.vertical !== 'boolean') {
+      const vertical = this.#defaults.vertical;
+      console.warn(`Invalid vertical option. Fallback: ${vertical}.`);
+      merged.vertical = vertical;
+    }
+
+    return merged;
   }
 }
 

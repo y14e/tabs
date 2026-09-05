@@ -1,6 +1,6 @@
 {
   "name": "@y14e/tabs",
-  "version": "2.0.14",
+  "version": "2.0.15",
   "description": "WAI-ARIA compliant tabs pattern implementation in TypeScript",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -55,6 +55,6 @@
   "dependencies": {
     "@y14e/attribute-utils": "^2.0.5",
     "@y14e/button": "^1.0.8",
-    "@y14e/roving-tabindex": "^3.1.23"
+    "@y14e/roving-tabindex": "^3.1.25"
   }
 }
