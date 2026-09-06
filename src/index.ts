@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.0.15
+ * @version 2.0.16
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -110,8 +110,8 @@ export class Tabs {
     }
 
     this.#rootElement = root;
-    this.#defaults = this.#mergeOptions(this.#defaults, Tabs.defaults);
-    this.#settings = this.#mergeOptions(this.#defaults, options);
+    this.#defaults = this.#resolveOptions(this.#defaults, Tabs.defaults);
+    this.#settings = this.#resolveOptions(this.#defaults, options);
     matchMedia('(prefers-reduced-motion: reduce)').matches &&
       Object.assign(this.#settings.animation, {
         content: { duration: 0 },
@@ -592,7 +592,7 @@ export class Tabs {
     return !element.hasAttribute('disabled');
   }
 
-  #mergeOptions(
+  #resolveOptions(
     target: TabsOptions,
     source: Partial<TabsOptions>,
   ): TabsOptions {
