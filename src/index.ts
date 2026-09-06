@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.0.16
+ * @version 2.0.17
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -616,7 +616,8 @@ export class Tabs {
     };
     const animation = merged.animation;
     const mergedContentAnimation = animation.content;
-    const defaultContentAnimation = this.#defaults.animation.content;
+    const defaults = this.#defaults;
+    const defaultContentAnimation = defaults.animation.content;
 
     if (typeof mergedContentAnimation.crossFade !== 'boolean') {
       const crossFade = defaultContentAnimation.crossFade;
@@ -657,7 +658,7 @@ export class Tabs {
 
     const mergedIndicatorAnimation = animation.indicator;
     const indicatorDuration = mergedIndicatorAnimation.duration;
-    const defaultIndicatorAnimation = this.#defaults.animation.indicator;
+    const defaultIndicatorAnimation = defaults.animation.indicator;
 
     if (
       typeof indicatorDuration !== 'number' ||
@@ -689,7 +690,7 @@ export class Tabs {
     }
 
     if (typeof merged.avoidDuplicates !== 'boolean') {
-      const avoidDuplicates = this.#defaults.avoidDuplicates;
+      const avoidDuplicates = defaults.avoidDuplicates;
       console.warn(
         `Invalid avoidDuplicates option. Fallback: ${avoidDuplicates}.`,
       );
@@ -697,13 +698,13 @@ export class Tabs {
     }
 
     if (typeof merged.manual !== 'boolean') {
-      const manual = this.#defaults.manual;
+      const manual = defaults.manual;
       console.warn(`Invalid manual option. Fallback: ${manual}.`);
       merged.manual = manual;
     }
 
     const mergedSelector = merged.selector;
-    const defaultSelector = this.#defaults.selector;
+    const defaultSelector = defaults.selector;
 
     try {
       document.querySelector(mergedSelector.content);
@@ -746,7 +747,7 @@ export class Tabs {
     }
 
     if (typeof merged.vertical !== 'boolean') {
-      const vertical = this.#defaults.vertical;
+      const vertical = defaults.vertical;
       console.warn(`Invalid vertical option. Fallback: ${vertical}.`);
       merged.vertical = vertical;
     }
