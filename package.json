@@ -1,28 +1,7 @@
 {
   "name": "@y14e/tabs",
-  "version": "2.0.17",
+  "version": "2.0.18",
   "description": "WAI-ARIA compliant tabs pattern implementation in TypeScript",
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "files": [
-    "dist",
-    "LICENSE",
-    "README.md"
-  ],
-  "scripts": {
-    "build": "tsup",
-    "prepublishOnly": "npm run build",
-    "lint": "tsc --noEmit"
-  },
   "keywords": [
     "a11y",
     "accessibility",
@@ -31,16 +10,42 @@
     "typescript",
     "utility"
   ],
-  "author": "Yusuke Kamiyamane",
-  "license": "MIT",
+  "homepage": "https://github.com/y14e/tabs#readme",
+  "bugs": {
+    "url": "https://github.com/y14e/tabs/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/y14e/tabs.git"
   },
-  "bugs": {
-    "url": "https://github.com/y14e/tabs/issues"
+  "license": "MIT",
+  "author": "Yusuke Kamiyamane",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
   },
-  "homepage": "https://github.com/y14e/tabs#readme",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@y14e/attribute-utils": "^2.0.8",
+    "@y14e/button": "^1.0.8",
+    "@y14e/roving-tabindex": "^3.1.27"
+  },
   "devDependencies": {
     "bun-types": "latest",
     "tsup": "^8.0.0",
@@ -51,10 +56,5 @@
   },
   "allowScripts": {
     "esbuild": true
-  },
-  "dependencies": {
-    "@y14e/attribute-utils": "^2.0.6",
-    "@y14e/button": "^1.0.8",
-    "@y14e/roving-tabindex": "^3.1.25"
   }
 }
