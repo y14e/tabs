@@ -49,11 +49,11 @@ interface TabsOptions {
   avoidDuplicates: boolean; // default: false
   manual: boolean;          // default: false
   selector: {
-    content: string;        // default: '[role='tablist'] + *'
+    content: string;        // default: '[role="tablist"] + *'
     indicator: string;      // default: '[data-tabs-indicator]'
-    list: string;           // default: '[role='tablist']'
-    panel: string;          // default: '[role='tabpanel']'
-    tab: string;            // default: '[role='tab']'
+    list: string;           // default: '[role="tablist"]'
+    panel: string;          // default: '[role="tabpanel"]'
+    tab: string;            // default: '[role="tab"]'
   };
   vertical: boolean;        // default: false
 }
