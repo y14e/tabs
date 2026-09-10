@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.0.18
+ * @version 2.0.19
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -203,14 +203,14 @@ export class Tabs {
       return;
     }
 
-    this.#tabElements.forEach((t) => {
-      const isSelected = this.#bindings.get(t)?.tabs.some((tt) => tt === tab);
+    for (const t of this.#tabElements) {
+      const isSelected = this.#bindings.get(t)?.tabs.some((t) => t === tab);
       t.setAttribute('aria-selected', String(isSelected));
       t.setAttribute(
         'tabindex',
         isSelected && !this.#isAvoidedTab(t) ? '0' : '-1',
       );
-    });
+    }
 
     if (!this.#contentElement) {
       return;
@@ -227,7 +227,7 @@ export class Tabs {
       return;
     }
 
-    this.#panelElements.forEach((p) => {
+    for (const p of this.#panelElements) {
       const { style } = p;
 
       if (fade) {
@@ -238,7 +238,7 @@ export class Tabs {
       p === panel && !this.#hasFocusable(p)
         ? p.setAttribute('tabindex', '0')
         : p.removeAttribute('tabindex');
-    });
+    }
 
     this.#panelElements.forEach((p, i) => {
       if (p === panel) {
@@ -295,7 +295,7 @@ export class Tabs {
     );
 
     // Panel
-    this.#panelElements.forEach((p) => {
+    for (const p of this.#panelElements) {
       const binding = this.#bindings.get(p);
 
       if (!binding) {
@@ -334,7 +334,7 @@ export class Tabs {
       const { signal } = this.#animationController;
       animation.addEventListener('cancel', cleanup, { once: true, signal });
       animation.addEventListener('finish', cleanup, { once: true, signal });
-    });
+    }
   }
 
   async destroy(force = false): Promise<void> {
@@ -346,21 +346,21 @@ export class Tabs {
     this.#eventController?.abort();
     this.#eventController = null;
 
-    this.#cleanupsRovingTabIndex.forEach((cleanup) => {
+    for (const cleanup of this.#cleanupsRovingTabIndex) {
       cleanup();
-    });
+    }
 
     this.#cleanupsRovingTabIndex.length = 0;
 
-    this.#buttons.forEach((button) => {
+    for (const button of this.#buttons) {
       button.destroy();
-    });
+    }
 
     this.#buttons.length = 0;
 
-    this.#indicators.forEach((indicator) => {
+    for (const indicator of this.#indicators) {
       indicator.destroy(force);
-    });
+    }
 
     this.#indicators.length = 0;
 
@@ -382,9 +382,9 @@ export class Tabs {
       );
     }
 
-    this.#panelElements.forEach((panel) => {
+    for (const panel of this.#panelElements) {
       this.#bindings.get(panel)?.animation?.cancel();
-    });
+    }
 
     this.#onContentAnimationFinish();
     this.#animationController?.abort();
@@ -466,7 +466,7 @@ export class Tabs {
       this.#buttons.push(new Button(tab));
     });
 
-    this.#indicatorElements.forEach((indicator) => {
+    for (const indicator of this.#indicatorElements) {
       indicator
         .closest<HTMLElement>(this.#settings.selector.list)
         ?.style.setProperty('position', 'relative');
@@ -474,7 +474,7 @@ export class Tabs {
       style.setProperty('display', 'block');
       style.setProperty('position', 'absolute');
       this.#indicators.push(new TabsIndicator(indicator, this.#settings));
-    });
+    }
 
     if (!this.#contentElement) {
       return;
@@ -484,7 +484,7 @@ export class Tabs {
     style.setProperty('align-items', 'start');
     style.setProperty('display', 'grid');
 
-    this.#panelElements.forEach((panel) => {
+    for (const panel of this.#panelElements) {
       panel.setAttribute('role', 'tabpanel');
       panel.style.setProperty('grid-area', '1 / 1');
       !panel.hasAttribute('hidden') &&
@@ -493,28 +493,26 @@ export class Tabs {
       panel.addEventListener('beforematch', this.#onPanelBeforeMatch, {
         signal,
       });
-    });
+    }
 
     const options = { selector: this.#settings.selector.tab, wrap: true };
 
-    this.#listElements.forEach((list) => {
+    for (const list of this.#listElements) {
       list.ariaOrientation !== 'undefined' &&
         Object.assign(options, {
           direction: this.#settings.vertical ? 'vertical' : 'horizontal',
         });
       this.#cleanupsRovingTabIndex.push(createRovingTabIndex(list, options));
 
-      list
-        .querySelectorAll<HTMLElement>(this.#settings.selector.tab)
-        .forEach((tab) => {
-          tab.setAttribute(
-            'tabindex',
-            tab.ariaSelected === 'true' && !this.#isAvoidedTab(tab)
-              ? '0'
-              : '-1',
-          );
-        });
-    });
+      for (const tab of list.querySelectorAll<HTMLElement>(
+        this.#settings.selector.tab,
+      )) {
+        tab.setAttribute(
+          'tabindex',
+          tab.ariaSelected === 'true' && !this.#isAvoidedTab(tab) ? '0' : '-1',
+        );
+      }
+    }
 
     this.#rootElement.setAttribute('data-tabs-initialized', '');
   }
@@ -542,15 +540,15 @@ export class Tabs {
   };
 
   #onContentAnimationFinish(): void {
-    ['block-size', 'overflow'].forEach((name) => {
+    for (const name of ['block-size', 'overflow']) {
       this.#contentElement?.style.removeProperty(name);
-    });
+    }
 
-    this.#panelElements.forEach((panel) => {
-      ['content-visibility', 'opacity'].forEach((name) => {
+    for (const panel of this.#panelElements) {
+      for (const name of ['content-visibility', 'opacity']) {
         panel.style.removeProperty(name);
-      });
-    });
+      }
+    }
 
     this.#rootElement.removeAttribute('data-tabs-animating');
   }
