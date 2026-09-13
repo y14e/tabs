@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.0.19
+ * @version 2.0.20
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -376,8 +376,8 @@ export class Tabs {
 
     if (!force) {
       await Promise.all(
-        this.#panelElements.map((panel) =>
-          this.#bindings.get(panel)?.animation?.finished.catch(() => {}),
+        this.#panelElements.map((p) =>
+          this.#bindings.get(p)?.animation?.finished.catch(() => {}),
         ),
       );
     }
@@ -573,7 +573,7 @@ export class Tabs {
       ...container.querySelectorAll<HTMLElement>(
         `:is(a[href], area[href], button, embed, iframe, input:not([type="hidden" i]), object, select, details > summary:first-of-type, textarea, [contenteditable]:not([contenteditable="false" i]), [controls], [tabindex]):not(:disabled, [hidden], [inert], [tabindex="-1"])`,
       ),
-    ].filter((element) => element.checkVisibility()).length;
+    ].filter((e) => e.checkVisibility()).length;
   }
 
   #isAvoidedTab(tab: HTMLElement): boolean {
