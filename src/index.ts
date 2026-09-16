@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.1.0
+ * @version 2.1.1
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -165,7 +165,7 @@ export class Tabs {
       ),
     ];
 
-    const length = this.#panelElements.length;
+    const { length } = this.#panelElements;
 
     if (!length) {
       console.warn('Missing panel elements');
