@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.1.5
+ * @version 2.1.6
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -705,13 +705,16 @@ export class Tabs {
     }
 
     for (const [key, value] of Object.entries(defaults.selector)) {
+      const { selector } = merged;
+      const k = key as keyof typeof selector;
+
       try {
-        document.querySelector(value);
+        document.querySelector(selector[k]);
       } catch {
         console.warn(
-          `Invalid ${key.replace(/[A-Z]/g, (c) => ` ${c.toLowerCase()}`)} selector. Fallback: '${value}'.`,
+          `Invalid ${k.replace(/[A-Z]/g, (c) => ` ${c.toLowerCase()}`)} selector. Fallback: '${value}'.`,
         );
-        merged.selector[key as keyof typeof merged.selector] = value;
+        selector[k] = value;
       }
     }
 
