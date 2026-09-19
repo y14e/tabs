@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.1.1
+ * @version 2.1.2
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -20,6 +20,7 @@ import {
 } from '@y14e/attribute-utils';
 import { Button } from '@y14e/button';
 import { createRovingTabIndex } from '@y14e/roving-tabindex';
+import { hasFocusable } from 'power-focusable';
 
 // -----------------------------------------------------------------------------
 // Types
@@ -322,7 +323,9 @@ export class Tabs {
         },
         {
           duration:
-            isMatch || !fade ? 0 : this.#settings.animation.content.duration,
+            isMatch || !fade
+              ? 0
+              : this.#settings.animation.content.duration * (crossFade ? 1 : 2),
           easing: 'ease',
         },
       );
@@ -573,11 +576,7 @@ export class Tabs {
   }
 
   #hasFocusable(container: HTMLElement): boolean {
-    return !![
-      ...container.querySelectorAll<HTMLElement>(
-        `:is(a[href], area[href], button, embed, iframe, input:not([type="hidden" i]), object, select, details > summary:first-of-type, textarea, [contenteditable]:not([contenteditable="false" i]), [controls], [tabindex]):not(:disabled, [hidden], [inert], [tabindex="-1"])`,
-      ),
-    ].filter((e) => e.checkVisibility()).length;
+    return hasFocusable(container, { skipVisibilityCheck: true });
   }
 
   #isAvoidedTab(tab: HTMLElement): boolean {
