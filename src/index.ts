@@ -610,10 +610,7 @@ export class Tabs {
           ...(source.animation?.indicator ?? {}),
         },
       },
-      selector: {
-        ...target.selector,
-        ...(source.selector ?? {}),
-      },
+      selector: { ...target.selector, ...(source.selector ?? {}) },
     };
     const animation = merged.animation;
     const mergedContentAnimation = animation.content;
