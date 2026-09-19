@@ -2,7 +2,7 @@
  * Tabs
  * WAI-ARIA compliant tabs pattern implementation in TypeScript.
  *
- * @version 2.1.2
+ * @version 2.1.3
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -704,47 +704,36 @@ export class Tabs {
       merged.manual = manual;
     }
 
-    const mergedSelector = merged.selector;
-    const defaultSelector = defaults.selector;
+    const selector = merged.selector;
 
-    try {
-      document.querySelector(mergedSelector.content);
-    } catch {
-      const content = defaultSelector.content;
-      console.warn(`Invalid content selector. Fallback: '${content}'.`);
-      mergedSelector.content = content;
+    function resolveSelector(
+      name: string,
+      target: string,
+      source: string,
+    ): string {
+      try {
+        document.querySelector(source);
+        return source;
+      } catch {
+        console.warn(
+          `Invalid ${name.replace(/[A-Z]/g, (c) => ` ${c.toLowerCase()}`)} selector. Fallback: '${target}'.`,
+        );
+        return target;
+      }
     }
 
-    try {
-      document.querySelector(mergedSelector.indicator);
-    } catch {
-      const indicator = defaultSelector.indicator;
-      console.warn(`Invalid indicator selector. Fallback: '${indicator}'.`);
-      mergedSelector.indicator = indicator;
-    }
-
-    try {
-      document.querySelector(mergedSelector.list);
-    } catch {
-      const list = defaultSelector.list;
-      console.warn(`Invalid list selector. Fallback: '${list}'.`);
-      mergedSelector.list = list;
-    }
-
-    try {
-      document.querySelector(mergedSelector.panel);
-    } catch {
-      const panel = defaultSelector.panel;
-      console.warn(`Invalid panel selector. Fallback: '${panel}'.`);
-      mergedSelector.panel = panel;
-    }
-
-    try {
-      document.querySelector(mergedSelector.tab);
-    } catch {
-      const tab = defaultSelector.tab;
-      console.warn(`Invalid tab selector. Fallback: '${tab}'.`);
-      mergedSelector.tab = tab;
+    for (const name of [
+      'content',
+      'indicator',
+      'list',
+      'panel',
+      'tab',
+    ] as const) {
+      selector[name] = resolveSelector(
+        name,
+        defaults.selector[name],
+        selector[name],
+      );
     }
 
     if (typeof merged.vertical !== 'boolean') {
