@@ -1,18 +1,3 @@
-/**
- * Tabs
- * WAI-ARIA compliant tabs pattern implementation in TypeScript.
- *
- * @version 2.1.7
- * @author Yusuke Kamiyamane
- * @license MIT
- * @copyright Copyright (c) Yusuke Kamiyamane
- * @see {@link https://github.com/y14e/tabs}
- */
-
-// -----------------------------------------------------------------------------
-// import
-// -----------------------------------------------------------------------------
-
 import {
   addAttributeToken,
   restoreAttributes,
@@ -21,10 +6,6 @@ import {
 import { Button } from '@y14e/button';
 import { createRovingTabIndex } from '@y14e/roving-tabindex';
 import { hasFocusable } from 'power-focusable';
-
-// -----------------------------------------------------------------------------
-// Types
-// -----------------------------------------------------------------------------
 
 export interface TabsOptions {
   animation: {
@@ -56,10 +37,6 @@ type Binding = {
   panel: HTMLElement;
   tabs: HTMLElement[];
 };
-
-// -----------------------------------------------------------------------------
-// APIs
-// -----------------------------------------------------------------------------
 
 export class Tabs {
   static defaults: Partial<TabsOptions> = {};
@@ -724,10 +701,6 @@ export class Tabs {
     return merged;
   }
 }
-
-// -----------------------------------------------------------------------------
-// Indicator
-// -----------------------------------------------------------------------------
 
 class TabsIndicator {
   #rootElement: HTMLElement;
