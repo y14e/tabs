@@ -6,43 +6,15 @@ import {
 import { Button } from '@y14e/button';
 import { createRovingTabIndex } from '@y14e/roving-tabindex';
 import { hasFocusable } from 'power-focusable';
-
-export interface TabsOptions {
-  animation: {
-    content: {
-      crossFade: boolean;
-      duration: number;
-      easing: string;
-      fade: boolean;
-    };
-    indicator: {
-      duration: number;
-      easing: string;
-    };
-  };
-  avoidDuplicates: boolean;
-  manual: boolean;
-  selector: {
-    content: string;
-    indicator: string;
-    list: string;
-    panel: string;
-    tab: string;
-  };
-  vertical: boolean;
-}
-
-type Binding = {
-  animation: Animation | null;
-  panel: HTMLElement;
-  tabs: HTMLElement[];
-};
+import { TabsIndicator } from '@/indicator';
+import { resolveOptions } from '@/options';
+import type { Binding, TabsOptions as Options } from '@/types';
 
 export class Tabs {
-  static defaults: Partial<TabsOptions> = {};
+  static defaults: Partial<Options> = {};
 
   #rootElement!: HTMLElement;
-  #defaults: TabsOptions = {
+  #defaults: Options = {
     animation: {
       content: {
         crossFade: true,
@@ -66,7 +38,7 @@ export class Tabs {
     },
     vertical: false,
   };
-  #settings!: TabsOptions;
+  #settings!: Options;
   #listElements!: HTMLElement[];
   #tabElements!: HTMLElement[];
   #indicatorElements!: HTMLElement[];
@@ -81,7 +53,7 @@ export class Tabs {
   #indicators: TabsIndicator[] = [];
   #isDestroyed = false;
 
-  constructor(root: HTMLElement, options: Partial<TabsOptions> = {}) {
+  constructor(root: HTMLElement, options: Partial<Options> = {}) {
     if (!(root instanceof HTMLElement)) {
       throw new TypeError('Invalid root element');
     }
@@ -92,8 +64,8 @@ export class Tabs {
     }
 
     this.#rootElement = root;
-    this.#defaults = this.#resolveOptions(this.#defaults, Tabs.defaults);
-    this.#settings = this.#resolveOptions(this.#defaults, options);
+    this.#defaults = resolveOptions(this.#defaults, Tabs.defaults);
+    this.#settings = resolveOptions(this.#defaults, options);
     matchMedia('(prefers-reduced-motion: reduce)').matches &&
       Object.assign(this.#settings.animation, {
         content: { duration: 0 },
@@ -569,215 +541,6 @@ export class Tabs {
   #isFocusable(element: HTMLElement): boolean {
     return !element.hasAttribute('disabled');
   }
-
-  #resolveOptions(
-    target: TabsOptions,
-    source: Partial<TabsOptions>,
-  ): TabsOptions {
-    const merged = {
-      ...target,
-      ...source,
-      animation: {
-        content: {
-          ...target.animation.content,
-          ...(source.animation?.content ?? {}),
-        },
-        indicator: {
-          ...target.animation.indicator,
-          ...(source.animation?.indicator ?? {}),
-        },
-      },
-      selector: { ...target.selector, ...(source.selector ?? {}) },
-    };
-    const animation = merged.animation;
-    const mergedContentAnimation = animation.content;
-    const defaults = this.#defaults;
-    const defaultContentAnimation = defaults.animation.content;
-
-    if (typeof mergedContentAnimation.crossFade !== 'boolean') {
-      const crossFade = defaultContentAnimation.crossFade;
-      console.warn(
-        `Invalid content animation crossFade option. Fallback: ${crossFade}.`,
-      );
-      mergedContentAnimation.crossFade = crossFade;
-    }
-
-    const contentDuration = mergedContentAnimation.duration;
-
-    if (typeof contentDuration !== 'number' || Number.isNaN(contentDuration)) {
-      const duration = defaultContentAnimation.duration;
-      console.warn(
-        `Invalid content animation duration. Fallback: ${duration} (ms).`,
-      );
-      mergedContentAnimation.duration = duration;
-    }
-
-    if (contentDuration < 0) {
-      console.warn('Invalid content animation duration. Fallback: 0 (ms).');
-      mergedContentAnimation.duration = 0;
-    }
-
-    if (
-      !CSS.supports('animation-timing-function', mergedContentAnimation.easing)
-    ) {
-      const easing = defaultContentAnimation.easing;
-      console.warn(`Invalid content animation easing. Fallback: '${easing}'.`);
-      mergedContentAnimation.easing = easing;
-    }
-
-    if (typeof mergedContentAnimation.fade !== 'boolean') {
-      const fade = defaultContentAnimation.fade;
-      console.warn(`Invalid content animation fade option. Fallback: ${fade}.`);
-      mergedContentAnimation.fade = fade;
-    }
-
-    const mergedIndicatorAnimation = animation.indicator;
-    const indicatorDuration = mergedIndicatorAnimation.duration;
-    const defaultIndicatorAnimation = defaults.animation.indicator;
-
-    if (
-      typeof indicatorDuration !== 'number' ||
-      Number.isNaN(indicatorDuration)
-    ) {
-      const duration = defaultIndicatorAnimation.duration;
-      console.warn(
-        `Invalid indicator animation duration. Fallback: ${duration} (ms).`,
-      );
-      mergedIndicatorAnimation.duration = duration;
-    }
-
-    if (indicatorDuration < 0) {
-      console.warn('Invalid indicator animation duration. Fallback: 0 (ms).');
-      mergedIndicatorAnimation.duration = 0;
-    }
-
-    if (
-      !CSS.supports(
-        'animation-timing-function',
-        mergedIndicatorAnimation.easing,
-      )
-    ) {
-      const easing = defaultIndicatorAnimation.easing;
-      console.warn(
-        `Invalid indicator animation easing. Fallback: '${easing}'.`,
-      );
-      mergedIndicatorAnimation.easing = easing;
-    }
-
-    if (typeof merged.avoidDuplicates !== 'boolean') {
-      const avoidDuplicates = defaults.avoidDuplicates;
-      console.warn(
-        `Invalid avoidDuplicates option. Fallback: ${avoidDuplicates}.`,
-      );
-      merged.avoidDuplicates = avoidDuplicates;
-    }
-
-    if (typeof merged.manual !== 'boolean') {
-      const manual = defaults.manual;
-      console.warn(`Invalid manual option. Fallback: ${manual}.`);
-      merged.manual = manual;
-    }
-
-    for (const [name, value] of Object.entries(defaults.selector)) {
-      const { selector } = merged;
-      const n = name as keyof typeof selector;
-
-      try {
-        document.querySelector(selector[n]);
-      } catch {
-        console.warn(
-          `Invalid ${n.replace(/[A-Z]/g, (c) => ` ${c.toLowerCase()}`)} selector. Fallback: '${value}'.`,
-        );
-        selector[n] = value;
-      }
-    }
-
-    if (typeof merged.vertical !== 'boolean') {
-      const vertical = defaults.vertical;
-      console.warn(`Invalid vertical option. Fallback: ${vertical}.`);
-      merged.vertical = vertical;
-    }
-
-    return merged;
-  }
 }
 
-class TabsIndicator {
-  #rootElement: HTMLElement;
-  #settings: TabsOptions;
-  #listElement: HTMLElement | null = null;
-  #animation: Animation | null = null;
-  #resizeObserver: ResizeObserver | null = null;
-  #mutationObserver: MutationObserver | null = null;
-
-  constructor(root: HTMLElement, settings: TabsOptions) {
-    this.#rootElement = root;
-    this.#settings = settings;
-    this.#listElement = root.closest(settings.selector.list);
-
-    if (!this.#listElement) {
-      return;
-    }
-
-    this.#resizeObserver = new ResizeObserver(this.#update);
-    this.#resizeObserver.observe(this.#listElement);
-    this.#mutationObserver = new MutationObserver(this.#update);
-    this.#mutationObserver.observe(this.#listElement, {
-      attributeFilter: ['aria-selected'],
-      subtree: true,
-    });
-  }
-
-  #update = (): void => {
-    if (!this.#rootElement.checkVisibility()) {
-      return;
-    }
-
-    if (!this.#listElement) {
-      return;
-    }
-
-    const isHorizontal = this.#listElement.ariaOrientation !== 'vertical';
-    const position = `inset${isHorizontal ? 'Inline' : 'Block'}Start`;
-    const size = `${isHorizontal ? 'inline' : 'block'}Size`;
-    const tab = this.#listElement.querySelector<HTMLElement>(
-      '[aria-selected="true"]',
-    );
-
-    if (!tab) {
-      return;
-    }
-
-    const tabRect = tab.getBoundingClientRect();
-    const listRect = this.#listElement.getBoundingClientRect();
-    const { duration, easing } = this.#settings.animation.indicator;
-    this.#animation = this.#rootElement.animate(
-      {
-        [position]: `${isHorizontal ? tabRect.left - listRect.left : tabRect.top - listRect.top}px`,
-        [size]: `${isHorizontal ? tabRect.width : tabRect.height}px`,
-      },
-      { duration, easing, fill: 'forwards' },
-    );
-  };
-
-  async destroy(force = false): Promise<void> {
-    this.#resizeObserver?.disconnect();
-    this.#resizeObserver = null;
-    this.#mutationObserver?.disconnect();
-    this.#mutationObserver = null;
-
-    if (!this.#animation) {
-      return;
-    }
-
-    if (!force) {
-      try {
-        await this.#animation.finished;
-      } catch {}
-    }
-
-    this.#animation.cancel();
-    this.#animation = null;
-    this.#listElement = null;
-  }
-}
+export type { Options as TabsOptions };
