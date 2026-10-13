@@ -15,7 +15,6 @@ export class Tabs {
   static defaults: Partial<Options> = {};
 
   #rootElement!: HTMLElement;
-  #defaults = defaults;
   #settings!: Options;
   #listElements!: HTMLElement[];
   #tabElements!: HTMLElement[];
@@ -42,8 +41,10 @@ export class Tabs {
     }
 
     this.#rootElement = root;
-    this.#defaults = resolveOptions(this.#defaults, Tabs.defaults);
-    this.#settings = resolveOptions(this.#defaults, options);
+    this.#settings = resolveOptions(
+      resolveOptions(defaults, Tabs.defaults),
+      options,
+    );
     matchMedia('(prefers-reduced-motion: reduce)').matches &&
       Object.assign(this.#settings.animation, {
         content: { duration: 0 },

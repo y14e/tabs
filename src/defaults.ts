@@ -1,6 +1,6 @@
 import type { TabsOptions as Options } from '@/types';
 
-export const defaults: Options = {
+export const defaults = {
   animation: {
     content: {
       crossFade: true,
@@ -23,4 +23,4 @@ export const defaults: Options = {
     tab: '[role="tab"]',
   },
   vertical: false,
-};
+} as const satisfies Options;

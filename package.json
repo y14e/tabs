@@ -1,6 +1,6 @@
 {
   "name": "@y14e/tabs",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "WAI-ARIA compliant tabs pattern implementation in TypeScript",
   "keywords": [
     "a11y",
@@ -55,6 +55,6 @@
   "dependencies": {
     "@y14e/attribute-utils": "^2.0.16",
     "@y14e/button": "^1.0.10",
-    "@y14e/roving-tabindex": "^3.4.0"
+    "@y14e/roving-tabindex": "^3.4.1"
   }
 }
