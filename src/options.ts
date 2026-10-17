@@ -1,4 +1,4 @@
-import type { TabsOptions as Options } from '@/types';
+import type { TabsOptions as Options } from './types';
 
 export function resolveOptions(
   defaults: Options,

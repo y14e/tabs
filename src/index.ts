@@ -6,10 +6,10 @@ import {
 import { Button } from '@y14e/button';
 import { createRovingTabIndex } from '@y14e/roving-tabindex';
 import { hasFocusable } from 'power-focusable';
-import { defaults } from '@/defaults';
-import { TabsIndicator } from '@/indicator';
-import { resolveOptions } from '@/options';
-import type { Binding, TabsOptions as Options } from '@/types';
+import { defaults } from './defaults';
+import { TabsIndicator } from './indicator';
+import { resolveOptions } from './options';
+import type { Binding, TabsOptions as Options } from './types';
 
 export class Tabs {
   static defaults: Partial<Options> = {};
