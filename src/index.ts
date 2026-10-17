@@ -267,8 +267,10 @@ export class Tabs {
 
       this.#animationController = new AbortController();
       const { signal } = this.#animationController;
-      animation.addEventListener('cancel', cleanup, { once: true, signal });
-      animation.addEventListener('finish', cleanup, { once: true, signal });
+
+      ['cancel', 'finish'].forEach((event) => {
+        animation.addEventListener(event, cleanup, { once: true, signal });
+      });
     }
   }
 
