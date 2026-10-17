@@ -65,7 +65,7 @@ If `true`, only the first tab list remains interactive; subsequent duplicates ar
 
 ### ⚙️ Customize defaults
 
-Override the global default settings applied to all accordion instances.
+Override the global default settings applied to all tabs instances.
 
 ```ts
 import { Tabs } from '@y14e/tabs';
