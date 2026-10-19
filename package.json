@@ -41,6 +41,12 @@
     "lint": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
+  "dependencies": {
+    "@y14e/attribute-utils": "^2.0.18",
+    "@y14e/basen": "^1.0.14",
+    "@y14e/button": "^1.0.10",
+    "@y14e/roving-tabindex": "^3.4.1"
+  },
   "devDependencies": {
     "bun-types": "latest",
     "tsup": "^8.0.0",
@@ -51,11 +57,5 @@
   },
   "allowScripts": {
     "esbuild": true
-  },
-  "dependencies": {
-    "@y14e/attribute-utils": "^2.0.18",
-    "@y14e/basen": "^1.0.14",
-    "@y14e/button": "^1.0.10",
-    "@y14e/roving-tabindex": "^3.4.1"
   }
 }
