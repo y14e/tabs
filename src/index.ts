@@ -27,6 +27,7 @@ export class Tabs {
   #animationController: AbortController | null = null;
   #cleanupsRovingTabIndex: (() => void)[] = [];
   #animation: Animation | null = null;
+  #lastInput: 'keyboard' | 'mouse' | null = null;
   #buttons: Button[] = [];
   #indicators: TabsIndicator[] = [];
   #isDestroyed = false;
@@ -401,6 +402,7 @@ export class Tabs {
       addAttributeToken(panel, 'aria-labelledby', tab.id);
       tab.addEventListener('click', this.#onTabClick, { signal });
       tab.addEventListener('focus', this.#onTabFocus, { signal });
+      tab.addEventListener('keydown', this.#onTabKeyDown, { signal });
       this.#buttons.push(new Button(tab));
     });
 
@@ -457,6 +459,7 @@ export class Tabs {
 
   #onTabClick = (event: MouseEvent): void => {
     event.preventDefault();
+    this.#lastInput = 'mouse';
     const tab = event.currentTarget;
 
     if (!(tab instanceof HTMLElement)) {
@@ -467,6 +470,10 @@ export class Tabs {
   };
 
   #onTabFocus = (event: FocusEvent): void => {
+    if (this.#lastInput === 'mouse') {
+      return;
+    }
+
     const tab = event.currentTarget;
 
     if (!(tab instanceof HTMLElement)) {
@@ -475,6 +482,10 @@ export class Tabs {
 
     !this.#settings.manual && tab.click();
     this.#isAvoidedTab(tab) && tab.blur();
+  };
+
+  #onTabKeyDown = (event: KeyboardEvent): void => {
+    this.#lastInput = 'keyboard';
   };
 
   #onContentAnimationFinish(): void {
