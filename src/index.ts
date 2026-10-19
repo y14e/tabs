@@ -3,6 +3,7 @@ import {
   restoreAttributes,
   saveAttributes,
 } from '@y14e/attribute-utils';
+import { generateBase62Random } from '@y14e/basen';
 import { Button } from '@y14e/button';
 import { createRovingTabIndex } from '@y14e/roving-tabindex';
 import { hasFocusable } from 'power-focusable';
@@ -377,7 +378,7 @@ export class Tabs {
     });
 
     this.#tabElements.forEach((tab, i) => {
-      const id = Math.random().toString(36).slice(-8);
+      const id = generateBase62Random(4);
       const panel = this.#panelElements[i % this.#panelElements.length];
 
       if (!panel) {
