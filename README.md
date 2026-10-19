@@ -73,9 +73,8 @@ import { Tabs } from '@y14e/tabs';
 Tabs.defaults = {
   animation: {
     content: {
-      crossFade: false,
+      crossfade: false,
       duration: 1000,
-      fade: true,
     },
   },
   manual: true,
