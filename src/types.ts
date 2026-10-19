@@ -1,7 +1,7 @@
 export interface TabsOptions {
   animation: {
     content: {
-      crossFade: boolean;
+      crossfade: boolean;
       duration: number;
       easing: string;
       fade: boolean;

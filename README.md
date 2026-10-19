@@ -36,7 +36,7 @@ new Tabs(root, options);
 interface TabsOptions {
   animation: {
     content: {
-      crossFade: boolean;   // default: true
+      crossfade: boolean;   // default: true
       duration: number;     // ms (default: 300)
       easing: string;       // <easing-function> (default: 'ease')
       fade: boolean;        // default: true

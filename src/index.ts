@@ -153,7 +153,7 @@ export class Tabs {
     this.#rootElement.setAttribute('data-tabs-animating', '');
     const { style } = this.#contentElement;
     style.setProperty('overflow', 'clip');
-    const { crossFade, fade } = this.#settings.animation.content;
+    const { crossfade, fade } = this.#settings.animation.content;
     const panel = this.#bindings.get(tab)?.panel;
 
     if (!panel) {
@@ -241,7 +241,7 @@ export class Tabs {
       const animation = p.animate(
         {
           opacity:
-            crossFade || !fade
+            crossfade || !fade
               ? isSelected
                 ? [opacity, '1']
                 : [opacity, '0']
@@ -253,7 +253,7 @@ export class Tabs {
           duration:
             isMatch || !fade
               ? 0
-              : this.#settings.animation.content.duration * (crossFade ? 1 : 2),
+              : this.#settings.animation.content.duration * (crossfade ? 1 : 2),
           easing: 'ease',
         },
       );

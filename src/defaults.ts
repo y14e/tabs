@@ -3,7 +3,7 @@ import type { TabsOptions as Options } from './types';
 export const defaults = {
   animation: {
     content: {
-      crossFade: true,
+      crossfade: true,
       duration: 300,
       easing: 'ease',
       fade: true,

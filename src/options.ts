@@ -23,12 +23,12 @@ export function resolveOptions(
   const mergedContentAnimation = animation.content;
   const defaultContentAnimation = defaults.animation.content;
 
-  if (typeof mergedContentAnimation.crossFade !== 'boolean') {
-    const crossFade = defaultContentAnimation.crossFade;
+  if (typeof mergedContentAnimation.crossfade !== 'boolean') {
+    const crossfade = defaultContentAnimation.crossfade;
     console.warn(
-      `Invalid content animation crossFade option. Fallback: ${crossFade}.`,
+      `Invalid content animation crossfade option. Fallback: ${crossfade}.`,
     );
-    mergedContentAnimation.crossFade = crossFade;
+    mergedContentAnimation.crossfade = crossfade;
   }
 
   const contentDuration = mergedContentAnimation.duration;
