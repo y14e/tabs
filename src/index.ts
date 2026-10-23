@@ -203,12 +203,7 @@ export class Tabs {
   }
 
   #initialize(): void {
-    saveAttributes(this.#listElements, [
-      'aria-hidden',
-      'aria-orientation',
-      'role',
-      'style',
-    ]);
+    saveAttributes(this.#listElements, ['aria-hidden', 'role', 'style']);
     saveAttributes(this.#tabElements, [
       'aria-controls',
       'id',
@@ -233,8 +228,6 @@ export class Tabs {
       this.#settings.avoidDuplicates &&
         i &&
         list.setAttribute('aria-hidden', 'true');
-      this.#settings.vertical &&
-        list.setAttribute('aria-orientation', 'vertical');
       list.setAttribute('role', 'tablist');
     });
 
@@ -298,10 +291,16 @@ export class Tabs {
     const options = { selector: this.#settings.selector.tab, wrap: true };
 
     for (const list of this.#listElements) {
-      list.ariaOrientation !== 'undefined' &&
-        Object.assign(options, {
-          direction: this.#settings.vertical ? 'vertical' : 'horizontal',
-        });
+      Object.assign(options, {
+        direction: () => {
+          const orientation = list.ariaOrientation;
+          return orientation === 'vertical'
+            ? 'vertical'
+            : orientation === 'undefined'
+              ? 'both'
+              : 'horizontal';
+        },
+      });
       this.#cleanupsRovingTabIndex.push(createRovingTabIndex(list, options));
 
       for (const tab of list.querySelectorAll<HTMLElement>(

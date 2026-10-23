@@ -120,11 +120,5 @@ export function resolveOptions(
     }
   }
 
-  if (typeof merged.vertical !== 'boolean') {
-    const vertical = defaults.vertical;
-    console.warn(`Invalid vertical option. Fallback: ${vertical}.`);
-    merged.vertical = vertical;
-  }
-
   return merged;
 }

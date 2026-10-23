@@ -55,7 +55,6 @@ interface TabsOptions {
     panel: string;          // default: '[role="tabpanel"]'
     tab: string;            // default: '[role="tab"]'
   };
-  vertical: boolean;        // default: false
 }
 ```
 

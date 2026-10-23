@@ -22,5 +22,4 @@ export const defaults = {
     panel: '[role="tabpanel"]',
     tab: '[role="tab"]',
   },
-  vertical: false,
 } as const satisfies Options;

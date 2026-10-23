@@ -20,7 +20,6 @@ export interface TabsOptions {
     panel: string;
     tab: string;
   };
-  vertical: boolean;
 }
 
 export type Binding = {
