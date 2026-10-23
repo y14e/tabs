@@ -133,10 +133,6 @@ export class Tabs {
       return;
     }
 
-    if (tab.ariaSelected === 'true') {
-      return;
-    }
-
     this.#activate(tab);
   }
 
@@ -375,6 +371,10 @@ export class Tabs {
   };
 
   #activate(tab: HTMLElement, isMatch = false): void {
+    if (tab.ariaSelected === 'true') {
+      return;
+    }
+
     for (const t of this.#tabElements) {
       const isSelected = this.#bindings.get(t)?.tabs.some((t) => t === tab);
       t.setAttribute('aria-selected', String(isSelected));
