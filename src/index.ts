@@ -123,7 +123,7 @@ export class Tabs {
     this.#initialize();
   }
 
-  activate(tab: HTMLElement, isMatch = false): void {
+  activate(tab: HTMLElement): void {
     if (this.#isDestroyed) {
       return;
     }
@@ -137,142 +137,7 @@ export class Tabs {
       return;
     }
 
-    for (const t of this.#tabElements) {
-      const isSelected = this.#bindings.get(t)?.tabs.some((t) => t === tab);
-      t.setAttribute('aria-selected', String(isSelected));
-      t.setAttribute(
-        'tabindex',
-        isSelected && !this.#isAvoidedTab(t) ? '0' : '-1',
-      );
-    }
-
-    if (!this.#contentElement) {
-      return;
-    }
-
-    const size = this.#contentElement.offsetHeight;
-    this.#rootElement.setAttribute('data-tabs-animating', '');
-    const { style } = this.#contentElement;
-    style.setProperty('overflow', 'clip');
-    const { crossfade, fade } = this.#settings.animation.content;
-    const panel = this.#bindings.get(tab)?.panel;
-
-    if (!panel) {
-      return;
-    }
-
-    for (const p of this.#panelElements) {
-      const { style } = p;
-
-      if (fade) {
-        style.setProperty('content-visibility', 'visible');
-        style.setProperty('opacity', p.hidden ? '0' : '1');
-      }
-
-      p === panel && !this.#hasFocusable(p)
-        ? p.setAttribute('tabindex', '0')
-        : p.removeAttribute('tabindex');
-    }
-
-    this.#panelElements.forEach((p, i) => {
-      if (p === panel) {
-        p.removeAttribute('hidden');
-      } else {
-        const tab = this.#tabElements[i];
-        tab &&
-          p.setAttribute('hidden', this.#isFocusable(tab) ? 'until-found' : '');
-      }
-    });
-
-    // Content
-    this.#animation?.cancel();
-    const { duration, easing } = this.#settings.animation.content;
-    const animation = this.#contentElement.animate(
-      {
-        blockSize: [
-          `${size}px`,
-          getComputedStyle(panel).getPropertyValue('block-size'),
-        ],
-      },
-      {
-        duration: isMatch ? 0 : duration,
-        easing: easing,
-      },
-    );
-    this.#animation = animation;
-
-    const cleanup = (): void => {
-      if (animation === this.#animation) {
-        this.#animation = null;
-      }
-    };
-
-    this.#animationController = new AbortController();
-    const { signal } = this.#animationController;
-    this.#animation.addEventListener('cancel', cleanup, {
-      once: true,
-      signal,
-    });
-
-    this.#animation.addEventListener(
-      'finish',
-      () => {
-        if (this.#animation === animation) {
-          this.#onContentAnimationFinish();
-          cleanup();
-        }
-      },
-      {
-        once: true,
-        signal,
-      },
-    );
-
-    // Panel
-    for (const p of this.#panelElements) {
-      const binding = this.#bindings.get(p);
-
-      if (!binding) {
-        return;
-      }
-
-      const opacity = getComputedStyle(p).getPropertyValue('opacity');
-      binding.animation?.cancel();
-      const isSelected = p === panel;
-      const animation = p.animate(
-        {
-          opacity:
-            crossfade || !fade
-              ? isSelected
-                ? [opacity, '1']
-                : [opacity, '0']
-              : isSelected
-                ? [opacity, opacity, '1']
-                : [opacity, '0', '0'],
-        },
-        {
-          duration:
-            isMatch || !fade
-              ? 0
-              : this.#settings.animation.content.duration * (crossfade ? 1 : 2),
-          easing: 'ease',
-        },
-      );
-      binding.animation = animation;
-
-      const cleanup = (): void => {
-        if (binding.animation === animation) {
-          binding.animation = null;
-        }
-      };
-
-      this.#animationController = new AbortController();
-      const { signal } = this.#animationController;
-
-      ['cancel', 'finish'].forEach((event) => {
-        animation.addEventListener(event, cleanup, { once: true, signal });
-      });
-    }
+    this.#activate(tab);
   }
 
   async destroy(force = false): Promise<void> {
@@ -464,7 +329,7 @@ export class Tabs {
       return;
     }
 
-    this.activate(tab);
+    this.#activate(tab);
   };
 
   #onTabFocus = (event: FocusEvent): void => {
@@ -506,8 +371,147 @@ export class Tabs {
     }
 
     const tab = this.#bindings.get(panel)?.tabs[0];
-    tab && this.activate(tab, true);
+    tab && this.#activate(tab, true);
   };
+
+  #activate(tab: HTMLElement, isMatch = false): void {
+    for (const t of this.#tabElements) {
+      const isSelected = this.#bindings.get(t)?.tabs.some((t) => t === tab);
+      t.setAttribute('aria-selected', String(isSelected));
+      t.setAttribute(
+        'tabindex',
+        isSelected && !this.#isAvoidedTab(t) ? '0' : '-1',
+      );
+    }
+
+    if (!this.#contentElement) {
+      return;
+    }
+
+    const size = this.#contentElement.offsetHeight;
+    this.#rootElement.setAttribute('data-tabs-animating', '');
+    const { style } = this.#contentElement;
+    style.setProperty('overflow', 'clip');
+    const { crossfade, fade } = this.#settings.animation.content;
+    const panel = this.#bindings.get(tab)?.panel;
+
+    if (!panel) {
+      return;
+    }
+
+    for (const p of this.#panelElements) {
+      const { style } = p;
+
+      if (fade) {
+        style.setProperty('content-visibility', 'visible');
+        style.setProperty('opacity', p.hidden ? '0' : '1');
+      }
+
+      p === panel && !this.#hasFocusable(p)
+        ? p.setAttribute('tabindex', '0')
+        : p.removeAttribute('tabindex');
+    }
+
+    this.#panelElements.forEach((p, i) => {
+      if (p === panel) {
+        p.removeAttribute('hidden');
+      } else {
+        const tab = this.#tabElements[i];
+        tab &&
+          p.setAttribute('hidden', this.#isFocusable(tab) ? 'until-found' : '');
+      }
+    });
+
+    // Content
+    this.#animation?.cancel();
+    const { duration, easing } = this.#settings.animation.content;
+    const animation = this.#contentElement.animate(
+      {
+        blockSize: [
+          `${size}px`,
+          getComputedStyle(panel).getPropertyValue('block-size'),
+        ],
+      },
+      {
+        duration: isMatch ? 0 : duration,
+        easing: easing,
+      },
+    );
+    this.#animation = animation;
+
+    const cleanup = (): void => {
+      if (animation === this.#animation) {
+        this.#animation = null;
+      }
+    };
+
+    this.#animationController = new AbortController();
+    const { signal } = this.#animationController;
+    this.#animation.addEventListener('cancel', cleanup, {
+      once: true,
+      signal,
+    });
+
+    this.#animation.addEventListener(
+      'finish',
+      () => {
+        if (this.#animation === animation) {
+          this.#onContentAnimationFinish();
+          cleanup();
+        }
+      },
+      {
+        once: true,
+        signal,
+      },
+    );
+
+    // Panel
+    for (const p of this.#panelElements) {
+      const binding = this.#bindings.get(p);
+
+      if (!binding) {
+        return;
+      }
+
+      const opacity = getComputedStyle(p).getPropertyValue('opacity');
+      binding.animation?.cancel();
+      const isSelected = p === panel;
+      const animation = p.animate(
+        {
+          opacity:
+            crossfade || !fade
+              ? isSelected
+                ? [opacity, '1']
+                : [opacity, '0']
+              : isSelected
+                ? [opacity, opacity, '1']
+                : [opacity, '0', '0'],
+        },
+        {
+          duration:
+            isMatch || !fade
+              ? 0
+              : this.#settings.animation.content.duration * (crossfade ? 1 : 2),
+          easing: 'ease',
+        },
+      );
+      binding.animation = animation;
+
+      const cleanup = (): void => {
+        if (binding.animation === animation) {
+          binding.animation = null;
+        }
+      };
+
+      this.#animationController = new AbortController();
+      const { signal } = this.#animationController;
+
+      ['cancel', 'finish'].forEach((event) => {
+        animation.addEventListener(event, cleanup, { once: true, signal });
+      });
+    }
+  }
 
   #createBinding(tabs: HTMLElement[], panel: HTMLElement): Binding {
     return { animation: null, panel, tabs };
