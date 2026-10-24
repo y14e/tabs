@@ -288,20 +288,21 @@ export class Tabs {
       });
     }
 
-    const options = { selector: this.#settings.selector.tab, wrap: true };
-
     for (const list of this.#listElements) {
-      Object.assign(options, {
-        direction: () => {
-          const orientation = list.ariaOrientation;
-          return orientation === 'vertical'
-            ? 'vertical'
-            : orientation === 'undefined'
-              ? 'both'
-              : 'horizontal';
-        },
-      });
-      this.#cleanupsRovingTabIndex.push(createRovingTabIndex(list, options));
+      this.#cleanupsRovingTabIndex.push(
+        createRovingTabIndex(list, {
+          direction: () => {
+            const orientation = list.ariaOrientation;
+            return orientation === 'vertical'
+              ? 'vertical'
+              : orientation === 'undefined'
+                ? 'both'
+                : 'horizontal';
+          },
+          selector: this.#settings.selector.tab,
+          wrap: true,
+        }),
+      );
 
       for (const tab of list.querySelectorAll<HTMLElement>(
         this.#settings.selector.tab,
