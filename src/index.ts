@@ -404,7 +404,7 @@ export class Tabs {
 
       if (fade) {
         style.setProperty('content-visibility', 'visible');
-        style.setProperty('opacity', p.hidden ? '0' : '1');
+        style.setProperty('opacity', !p.hidden ? '1' : '0');
       }
 
       p === panel && !this.#hasFocusable(p)
@@ -433,7 +433,7 @@ export class Tabs {
         ],
       },
       {
-        duration: isMatch ? 0 : duration,
+        duration: !isMatch ? duration : 0,
         easing: easing,
       },
     );
@@ -490,9 +490,10 @@ export class Tabs {
         },
         {
           duration:
-            isMatch || !fade
-              ? 0
-              : this.#settings.animation.content.duration * (crossfade ? 1 : 2),
+            !isMatch && fade
+              ? this.#settings.animation.content.duration *
+                (crossfade ? 1 : 1.5)
+              : 0,
           easing: 'ease',
         },
       );
