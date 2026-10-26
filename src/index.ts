@@ -221,13 +221,16 @@ export class Tabs {
       'style',
       'tabindex',
     ]);
+    const {
+      avoidDuplicates,
+      manual,
+      selector: { tab },
+    } = this.#settings;
     this.#eventController = new AbortController();
     const { signal } = this.#eventController;
 
     this.#listElements.forEach((list, i) => {
-      this.#settings.avoidDuplicates &&
-        i &&
-        list.setAttribute('aria-hidden', 'true');
+      avoidDuplicates && i && list.setAttribute('aria-hidden', 'true');
       list.setAttribute('role', 'tablist');
     });
 
@@ -255,7 +258,8 @@ export class Tabs {
       addAttributeToken(panel, 'aria-labelledby', tab.id);
       tab.addEventListener('click', this.#onTabClick, { signal });
       tab.addEventListener('focus', this.#onTabFocus, { signal });
-      tab.addEventListener('mousedown', this.#onTabMouseDown, { signal });
+      !manual &&
+        tab.addEventListener('mousedown', this.#onTabMouseDown, { signal });
       this.#buttons.push(new Button(tab));
     });
 
@@ -299,17 +303,15 @@ export class Tabs {
                 ? 'both'
                 : 'horizontal';
           },
-          selector: this.#settings.selector.tab,
+          selector: tab,
           wrap: true,
         }),
       );
 
-      for (const tab of list.querySelectorAll<HTMLElement>(
-        this.#settings.selector.tab,
-      )) {
-        tab.setAttribute(
+      for (const t of list.querySelectorAll<HTMLElement>(tab)) {
+        t.setAttribute(
           'tabindex',
-          tab.ariaSelected === 'true' && !this.#isAvoidedTab(tab) ? '0' : '-1',
+          t.ariaSelected === 'true' && !this.#isAvoidedTab(t) ? '0' : '-1',
         );
       }
     }
