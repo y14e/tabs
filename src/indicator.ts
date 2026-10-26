@@ -1,6 +1,6 @@
 import type { TabsOptions as Options } from './types';
 
-export class TabsIndicator {
+export class Indicator {
   #rootElement: HTMLElement;
   #settings: Options;
   #listElement: HTMLElement | null = null;
@@ -38,9 +38,7 @@ export class TabsIndicator {
     const isHorizontal = this.#listElement.ariaOrientation !== 'vertical';
     const position = `inset${isHorizontal ? 'Inline' : 'Block'}Start`;
     const size = `${isHorizontal ? 'inline' : 'block'}Size`;
-    const tab = this.#listElement.querySelector<HTMLElement>(
-      '[aria-selected="true"]',
-    );
+    const tab = this.#listElement.querySelector('[aria-selected="true"]');
 
     if (!tab) {
       return;

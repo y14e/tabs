@@ -8,7 +8,7 @@ import { Button } from '@y14e/button';
 import { createRovingTabIndex } from '@y14e/roving-tabindex';
 import { hasFocusable } from 'power-focusable';
 import { defaults } from './defaults';
-import { TabsIndicator } from './indicator';
+import { Indicator } from './indicator';
 import { resolveOptions } from './options';
 import type { Binding, TabsOptions as Options } from './types';
 
@@ -28,7 +28,7 @@ export class Tabs {
   #cleanupsRovingTabIndex: (() => void)[] = [];
   #animation: Animation | null = null;
   #buttons: Button[] = [];
-  #indicators: TabsIndicator[] = [];
+  #indicators: Indicator[] = [];
   #isDestroyed = false;
 
   constructor(root: HTMLElement, options: Partial<Options> = {}) {
@@ -270,7 +270,7 @@ export class Tabs {
       const { style } = indicator;
       style.setProperty('display', 'block');
       style.setProperty('position', 'absolute');
-      this.#indicators.push(new TabsIndicator(indicator, this.#settings));
+      this.#indicators.push(new Indicator(indicator, this.#settings));
     }
 
     if (!this.#contentElement) {
