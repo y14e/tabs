@@ -2,6 +2,9 @@
 
 WAI-ARIA compliant [tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) pattern implementation in TypeScript.
 
+> [!TIP]
+> The behavior of arrow key navigation changes dynamically depending on the value of the `aria-orientation` attribute.
+
 ## Install
 
 ```bash
