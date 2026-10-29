@@ -374,7 +374,7 @@ export class Tabs {
 
     for (const t of this.#tabElements) {
       const isSelected = this.#bindings.get(t)?.tabs.some((t) => t === tab);
-      t.setAttribute('aria-selected', String(isSelected));
+      t.setAttribute('aria-selected', `${isSelected}`);
       t.setAttribute(
         'tabindex',
         isSelected && !this.#isAvoidedTab(t) ? '0' : '-1',
