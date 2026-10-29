@@ -246,12 +246,7 @@ export class Tabs {
       addAttributeToken(tab, 'aria-controls', panel.id);
       !tab.hasAttribute('aria-selected') &&
         tab.setAttribute('aria-selected', 'false');
-      const isAvoided = this.#isAvoidedTab(tab);
-
-      if (!isAvoided) {
-        tab.id ||= `tabs-tab-${id}`;
-      }
-
+      tab.id ||= `tabs-tab-${id}`;
       tab.setAttribute('role', 'tab');
       !this.#isFocusable(tab) &&
         tab.style.setProperty('pointer-events', 'none');
