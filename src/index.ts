@@ -525,13 +525,8 @@ export class Tabs {
   }
 
   #isAvoidedTab(tab: HTMLElement): boolean {
-    const binding = this.#bindings.get(tab);
-
-    if (!binding) {
-      return false;
-    }
-
-    return this.#settings.avoidDuplicates && binding.tabs.indexOf(tab) > 0;
+    const tabs = this.#bindings.get(tab)?.tabs;
+    return !!tabs && this.#settings.avoidDuplicates && tabs.indexOf(tab) > 0;
   }
 
   #isFocusable(element: HTMLElement): boolean {
