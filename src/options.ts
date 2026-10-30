@@ -1,9 +1,6 @@
 import type { TabsOptions as Options } from './types';
 
-export function resolveOptions(
-  defaults: Options,
-  source: Partial<Options>,
-): Options {
+export function resolveOptions(defaults: Options, source: Partial<Options>): Options {
   const merged = {
     ...defaults,
     ...source,
@@ -25,9 +22,7 @@ export function resolveOptions(
 
   if (typeof mergedContentAnimation.crossfade !== 'boolean') {
     const crossfade = defaultContentAnimation.crossfade;
-    console.warn(
-      `Invalid content animation crossfade option. Fallback: ${crossfade}.`,
-    );
+    console.warn(`Invalid content animation crossfade option. Fallback: ${crossfade}.`);
     mergedContentAnimation.crossfade = crossfade;
   }
 
@@ -35,9 +30,7 @@ export function resolveOptions(
 
   if (typeof contentDuration !== 'number' || Number.isNaN(contentDuration)) {
     const duration = defaultContentAnimation.duration;
-    console.warn(
-      `Invalid content animation duration. Fallback: ${duration} (ms).`,
-    );
+    console.warn(`Invalid content animation duration. Fallback: ${duration} (ms).`);
     mergedContentAnimation.duration = duration;
   }
 
@@ -46,9 +39,7 @@ export function resolveOptions(
     mergedContentAnimation.duration = 0;
   }
 
-  if (
-    !CSS.supports('animation-timing-function', mergedContentAnimation.easing)
-  ) {
+  if (!CSS.supports('animation-timing-function', mergedContentAnimation.easing)) {
     const easing = defaultContentAnimation.easing;
     console.warn(`Invalid content animation easing. Fallback: '${easing}'.`);
     mergedContentAnimation.easing = easing;
@@ -64,14 +55,9 @@ export function resolveOptions(
   const indicatorDuration = mergedIndicatorAnimation.duration;
   const defaultIndicatorAnimation = defaults.animation.indicator;
 
-  if (
-    typeof indicatorDuration !== 'number' ||
-    Number.isNaN(indicatorDuration)
-  ) {
+  if (typeof indicatorDuration !== 'number' || Number.isNaN(indicatorDuration)) {
     const duration = defaultIndicatorAnimation.duration;
-    console.warn(
-      `Invalid indicator animation duration. Fallback: ${duration} (ms).`,
-    );
+    console.warn(`Invalid indicator animation duration. Fallback: ${duration} (ms).`);
     mergedIndicatorAnimation.duration = duration;
   }
 
@@ -80,9 +66,7 @@ export function resolveOptions(
     mergedIndicatorAnimation.duration = 0;
   }
 
-  if (
-    !CSS.supports('animation-timing-function', mergedIndicatorAnimation.easing)
-  ) {
+  if (!CSS.supports('animation-timing-function', mergedIndicatorAnimation.easing)) {
     const easing = defaultIndicatorAnimation.easing;
     console.warn(`Invalid indicator animation easing. Fallback: '${easing}'.`);
     mergedIndicatorAnimation.easing = easing;
@@ -90,9 +74,7 @@ export function resolveOptions(
 
   if (typeof merged.avoidDuplicates !== 'boolean') {
     const avoidDuplicates = defaults.avoidDuplicates;
-    console.warn(
-      `Invalid avoidDuplicates option. Fallback: ${avoidDuplicates}.`,
-    );
+    console.warn(`Invalid avoidDuplicates option. Fallback: ${avoidDuplicates}.`);
     merged.avoidDuplicates = avoidDuplicates;
   }
 
@@ -104,10 +86,7 @@ export function resolveOptions(
 
   const { selector } = defaults;
 
-  for (const [name, value] of Object.entries(selector) as [
-    keyof typeof selector,
-    string,
-  ][]) {
+  for (const [name, value] of Object.entries(selector) as [keyof typeof selector, string][]) {
     const { selector } = merged;
 
     try {

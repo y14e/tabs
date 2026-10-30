@@ -1,8 +1,4 @@
-import {
-  addAttributeToken,
-  restoreAttributes,
-  saveAttributes,
-} from '@y14e/attribute-utils';
+import { addAttributeToken, restoreAttributes, saveAttributes } from '@y14e/attribute-utils';
 import { generateBase62Random } from '@y14e/basen';
 import { Button } from '@y14e/button';
 import { createRovingTabIndex } from '@y14e/roving-tabindex';
@@ -42,10 +38,7 @@ export class Tabs {
     }
 
     this.#rootElement = root;
-    this.#settings = resolveOptions(
-      resolveOptions(defaults, Tabs.defaults),
-      options,
-    );
+    this.#settings = resolveOptions(resolveOptions(defaults, Tabs.defaults), options);
     matchMedia('(prefers-reduced-motion: reduce)').matches &&
       Object.assign(this.#settings.animation, {
         content: { duration: 0 },
@@ -175,9 +168,7 @@ export class Tabs {
 
     if (!force) {
       await Promise.all(
-        this.#panelElements.map((p) =>
-          this.#bindings.get(p)?.animation?.finished.catch(() => {}),
-        ),
+        this.#panelElements.map((p) => this.#bindings.get(p)?.animation?.finished.catch(() => {})),
       );
     }
 
@@ -204,13 +195,7 @@ export class Tabs {
 
   #initialize(): void {
     saveAttributes(this.#listElements, ['aria-hidden', 'role', 'style']);
-    saveAttributes(this.#tabElements, [
-      'aria-controls',
-      'id',
-      'role',
-      'style',
-      'tabindex',
-    ]);
+    saveAttributes(this.#tabElements, ['aria-controls', 'id', 'role', 'style', 'tabindex']);
     saveAttributes(this.#indicatorElements, 'style');
     this.#contentElement && saveAttributes(this.#contentElement, 'style');
     saveAttributes(this.#panelElements, [
@@ -244,24 +229,20 @@ export class Tabs {
 
       panel.id ||= `tabs-panel-${id}`;
       addAttributeToken(tab, 'aria-controls', panel.id);
-      !tab.hasAttribute('aria-selected') &&
-        tab.setAttribute('aria-selected', 'false');
+      !tab.hasAttribute('aria-selected') && tab.setAttribute('aria-selected', 'false');
       tab.id ||= `tabs-tab-${id}`;
       tab.setAttribute('role', 'tab');
-      !this.#isFocusable(tab) &&
-        tab.style.setProperty('pointer-events', 'none');
+      !this.#isFocusable(tab) && tab.style.setProperty('pointer-events', 'none');
       addAttributeToken(panel, 'aria-labelledby', tab.id);
       tab.addEventListener('click', this.#onTabClick, { signal });
       tab.addEventListener('focus', this.#onTabFocus, { signal });
-      !manual &&
-        tab.addEventListener('mousedown', this.#onTabMouseDown, { signal });
+      !manual && tab.addEventListener('mousedown', this.#onTabMouseDown, { signal });
       this.#buttons.push(new Button(tab));
     });
 
     for (const indicator of this.#indicatorElements) {
       indicator
-        .closest<HTMLElement>(this.#settings.selector.list)
-        ?.style.setProperty('position', 'relative');
+        .closest<HTMLElement>(this.#settings.selector.list)?.style.setProperty('position', 'relative');
       const { style } = indicator;
       style.setProperty('display', 'block');
       style.setProperty('position', 'absolute');
@@ -282,9 +263,7 @@ export class Tabs {
       !panel.hasAttribute('hidden') &&
         !this.#hasFocusable(panel) &&
         panel.setAttribute('tabindex', '0');
-      panel.addEventListener('beforematch', this.#onPanelBeforeMatch, {
-        signal,
-      });
+      panel.addEventListener('beforematch', this.#onPanelBeforeMatch, { signal });
     }
 
     for (const list of this.#listElements) {
@@ -375,10 +354,7 @@ export class Tabs {
     for (const t of this.#tabElements) {
       const isSelected = this.#bindings.get(t)?.tabs.some((t) => t === tab);
       t.setAttribute('aria-selected', `${isSelected}`);
-      t.setAttribute(
-        'tabindex',
-        isSelected && !this.#isAvoidedTab(t) ? '0' : '-1',
-      );
+      t.setAttribute('tabindex', isSelected && !this.#isAvoidedTab(t) ? '0' : '-1');
     }
 
     if (!this.#contentElement) {
@@ -414,8 +390,7 @@ export class Tabs {
         p.removeAttribute('hidden');
       } else {
         const tab = this.#tabElements[i];
-        tab &&
-          p.setAttribute('hidden', this.#isFocusable(tab) ? 'until-found' : '');
+        tab && p.setAttribute('hidden', this.#isFocusable(tab) ? 'until-found' : '');
       }
     });
 
@@ -423,16 +398,8 @@ export class Tabs {
     this.#animation?.cancel();
     const { duration, easing } = this.#settings.animation.content;
     const animation = this.#contentElement.animate(
-      {
-        blockSize: [
-          `${size}px`,
-          getComputedStyle(panel).getPropertyValue('block-size'),
-        ],
-      },
-      {
-        duration: !isMatch ? duration : 0,
-        easing: easing,
-      },
+      { blockSize: [`${size}px`, getComputedStyle(panel).getPropertyValue('block-size')] },
+      { duration: !isMatch ? duration : 0, easing: easing },
     );
     this.#animation = animation;
 
@@ -444,10 +411,7 @@ export class Tabs {
 
     this.#animationController = new AbortController();
     const { signal } = this.#animationController;
-    this.#animation.addEventListener('cancel', cleanup, {
-      once: true,
-      signal,
-    });
+    this.#animation.addEventListener('cancel', cleanup, { once: true, signal });
 
     this.#animation.addEventListener(
       'finish',
@@ -457,10 +421,7 @@ export class Tabs {
           cleanup();
         }
       },
-      {
-        once: true,
-        signal,
-      },
+      { once: true, signal },
     );
 
     // Panel
@@ -488,8 +449,7 @@ export class Tabs {
         {
           duration:
             !isMatch && fade
-              ? this.#settings.animation.content.duration *
-                (crossfade ? 1 : 1.5)
+              ? this.#settings.animation.content.duration * (crossfade ? 1 : 1.5)
               : 0,
           easing: 'ease',
         },
