@@ -65,7 +65,6 @@ export class Tabs {
     this.#indicatorElements = [
       ...this.#rootElement.querySelectorAll<HTMLElement>(`${indicator}${NOT_NESTED}`),
     ];
-
     this.#contentElement = this.#rootElement.querySelector<HTMLElement>(content);
 
     if (!this.#contentElement) {
