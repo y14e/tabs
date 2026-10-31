@@ -44,11 +44,10 @@ export class Tabs {
         content: { duration: 0 },
         indicator: { duration: 0 },
       });
-    const NOT_NESTED = `:not(:scope ${this.#settings.selector.panel} *)`;
+    const { list, tab, indicator, content, panel } = this.#settings.selector;
+    const NOT_NESTED = `:not(:scope ${panel} *)`;
     this.#listElements = [
-      ...this.#rootElement.querySelectorAll<HTMLElement>(
-        `${this.#settings.selector.list}${NOT_NESTED}`,
-      ),
+      ...this.#rootElement.querySelectorAll<HTMLElement>(`${list}${NOT_NESTED}`),
     ];
 
     if (!this.#listElements.length) {
@@ -56,11 +55,7 @@ export class Tabs {
       return;
     }
 
-    this.#tabElements = [
-      ...this.#rootElement.querySelectorAll<HTMLElement>(
-        `${this.#settings.selector.tab}${NOT_NESTED}`,
-      ),
-    ];
+    this.#tabElements = [...this.#rootElement.querySelectorAll<HTMLElement>(`${tab}${NOT_NESTED}`)];
 
     if (!this.#tabElements.length) {
       console.warn('Missing tab elements');
@@ -68,14 +63,10 @@ export class Tabs {
     }
 
     this.#indicatorElements = [
-      ...this.#rootElement.querySelectorAll<HTMLElement>(
-        `${this.#settings.selector.indicator}${NOT_NESTED}`,
-      ),
+      ...this.#rootElement.querySelectorAll<HTMLElement>(`${indicator}${NOT_NESTED}`),
     ];
 
-    this.#contentElement = this.#rootElement.querySelector<HTMLElement>(
-      this.#settings.selector.content,
-    );
+    this.#contentElement = this.#rootElement.querySelector<HTMLElement>(content);
 
     if (!this.#contentElement) {
       console.warn('Missing content element');
@@ -83,9 +74,7 @@ export class Tabs {
     }
 
     this.#panelElements = [
-      ...this.#rootElement.querySelectorAll<HTMLElement>(
-        `${this.#settings.selector.panel}${NOT_NESTED}`,
-      ),
+      ...this.#rootElement.querySelectorAll<HTMLElement>(`${panel}${NOT_NESTED}`),
     ];
 
     const { length } = this.#panelElements;
@@ -242,7 +231,8 @@ export class Tabs {
 
     for (const indicator of this.#indicatorElements) {
       indicator
-        .closest<HTMLElement>(this.#settings.selector.list)?.style.setProperty('position', 'relative');
+        .closest<HTMLElement>(this.#settings.selector.list)
+        ?.style.setProperty('position', 'relative');
       const { style } = indicator;
       style.setProperty('display', 'block');
       style.setProperty('position', 'absolute');
