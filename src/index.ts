@@ -221,11 +221,11 @@ export class Tabs {
       tab.id ||= `tabs-tab-${id}`;
       tab.setAttribute('role', 'tab');
       !this.#isFocusable(tab) && tab.style.setProperty('pointer-events', 'none');
-      addAttributeToken(panel, 'aria-labelledby', tab.id);
       tab.addEventListener('click', this.#onTabClick, { signal });
       tab.addEventListener('focus', this.#onTabFocus, { signal });
       !manual && tab.addEventListener('mousedown', this.#onTabMouseDown, { signal });
       this.#buttons.push(new Button(tab));
+      addAttributeToken(panel, 'aria-labelledby', tab.id);
     });
 
     for (const indicator of this.#indicatorElements) {
