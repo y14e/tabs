@@ -311,12 +311,12 @@ export class Tabs {
   };
 
   #onContentAnimationFinish(): void {
-    for (const name of ['block-size', 'overflow']) {
+    for (const name of ['block-size', 'overflow'] as const) {
       this.#contentElement?.style.removeProperty(name);
     }
 
     for (const panel of this.#panelElements) {
-      for (const name of ['content-visibility', 'opacity']) {
+      for (const name of ['content-visibility', 'opacity'] as const) {
         panel.style.removeProperty(name);
       }
     }
