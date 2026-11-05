@@ -478,11 +478,7 @@ export class Tabs {
   }
 
   #isValidTab(tab: HTMLElement): boolean {
-    return (
-      tab instanceof HTMLElement &&
-      this.#bindings.has(tab) &&
-      tab.matches(this.#settings.selector.tab)
-    );
+    return tab.matches(this.#settings.selector.tab) && this.#bindings.has(tab);
   }
 }
 
