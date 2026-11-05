@@ -109,7 +109,7 @@ export class Tabs {
       return;
     }
 
-    if (!(tab instanceof HTMLElement) || !this.#bindings.has(tab)) {
+    if (!this.#isValidTab(tab)) {
       console.warn('Invalid tab element');
       return;
     }
@@ -475,6 +475,14 @@ export class Tabs {
 
   #isFocusable(element: HTMLElement): boolean {
     return !element.hasAttribute('disabled');
+  }
+
+  #isValidTab(tab: HTMLElement): boolean {
+    return (
+      tab instanceof HTMLElement &&
+      this.#bindings.has(tab) &&
+      tab.matches(this.#settings.selector.tab)
+    );
   }
 }
 
