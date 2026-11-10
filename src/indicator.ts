@@ -44,13 +44,13 @@ export class Indicator {
       return;
     }
 
-    const tabRect = tab.getBoundingClientRect();
-    const listRect = this.#listElement.getBoundingClientRect();
+    const { x: tx, y: ty, width: tw, height: th } = tab.getBoundingClientRect();
+    const { x: lx, y: ly } = this.#listElement.getBoundingClientRect();
     const { duration, easing } = this.#settings.animation.indicator;
     this.#animation = this.#rootElement.animate(
       {
-        [position]: `${isHorizontal ? tabRect.left - listRect.left : tabRect.top - listRect.top}px`,
-        [size]: `${isHorizontal ? tabRect.width : tabRect.height}px`,
+        [position]: `${isHorizontal ? tx - lx : ty - ly}px`,
+        [size]: `${isHorizontal ? tw : th}px`,
       },
       { duration, easing, fill: 'forwards' },
     );
