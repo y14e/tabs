@@ -25,5 +25,5 @@ export interface TabsOptions {
 export type Binding = {
   animation: Animation | null;
   panel: HTMLElement;
-  tabs: HTMLElement[];
+  tabs: ReadonlyArray<HTMLElement>;
 };

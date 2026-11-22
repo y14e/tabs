@@ -460,7 +460,7 @@ export class Tabs {
     }
   }
 
-  #createBinding(tabs: HTMLElement[], panel: HTMLElement): Binding {
+  #createBinding(tabs: ReadonlyArray<HTMLElement>, panel: HTMLElement): Binding {
     return { animation: null, panel, tabs };
   }
 
