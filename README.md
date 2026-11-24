@@ -26,10 +26,10 @@ import { Tabs } from 'https://esm.unpkg.com/@y14e/tabs@<x.x.x>';
 ## Usage
 
 ```ts
-new Tabs(root, options);
+new Tabs(element, options);
 // => Tabs
 //
-// root: HTMLElement
+// element: HTMLElement
 // options (optional): TabsOptions
 ```
 

@@ -11,7 +11,7 @@ import type { Binding, TabsOptions as Options } from './types';
 export class Tabs {
   static defaults: Partial<Options> = {};
 
-  #rootElement!: HTMLElement;
+  #element!: HTMLElement;
   #settings!: Options;
   #listElements!: HTMLElement[];
   #tabElements!: HTMLElement[];
@@ -27,17 +27,17 @@ export class Tabs {
   #indicators: Indicator[] = [];
   #isDestroyed = false;
 
-  constructor(root: HTMLElement, options: Partial<Options> = {}) {
-    if (!(root instanceof HTMLElement)) {
-      throw new TypeError('Invalid root element');
+  constructor(element: HTMLElement, options: Partial<Options> = {}) {
+    if (!(element instanceof HTMLElement)) {
+      throw new TypeError('Invalid element');
     }
 
-    if (root.hasAttribute('data-tabs-initialized')) {
+    if (element.hasAttribute('data-tabs-initialized')) {
       console.warn('Already initialized');
       return;
     }
 
-    this.#rootElement = root;
+    this.#element = element;
     this.#settings = resolveOptions(resolveOptions(defaults, Tabs.defaults), options);
     matchMedia('(prefers-reduced-motion: reduce)').matches &&
       Object.assign(this.#settings.animation, {
@@ -46,16 +46,14 @@ export class Tabs {
       });
     const { list, tab, indicator, content, panel } = this.#settings.selector;
     const NOT_NESTED = `:not(:scope ${panel} *)`;
-    this.#listElements = [
-      ...this.#rootElement.querySelectorAll<HTMLElement>(`${list}${NOT_NESTED}`),
-    ];
+    this.#listElements = [...this.#element.querySelectorAll<HTMLElement>(`${list}${NOT_NESTED}`)];
 
     if (!this.#listElements.length) {
       console.warn('Missing list elements');
       return;
     }
 
-    this.#tabElements = [...this.#rootElement.querySelectorAll<HTMLElement>(`${tab}${NOT_NESTED}`)];
+    this.#tabElements = [...this.#element.querySelectorAll<HTMLElement>(`${tab}${NOT_NESTED}`)];
 
     if (!this.#tabElements.length) {
       console.warn('Missing tab elements');
@@ -63,18 +61,16 @@ export class Tabs {
     }
 
     this.#indicatorElements = [
-      ...this.#rootElement.querySelectorAll<HTMLElement>(`${indicator}${NOT_NESTED}`),
+      ...this.#element.querySelectorAll<HTMLElement>(`${indicator}${NOT_NESTED}`),
     ];
-    this.#contentElement = this.#rootElement.querySelector<HTMLElement>(content);
+    this.#contentElement = this.#element.querySelector<HTMLElement>(content);
 
     if (!this.#contentElement) {
       console.warn('Missing content element');
       return;
     }
 
-    this.#panelElements = [
-      ...this.#rootElement.querySelectorAll<HTMLElement>(`${panel}${NOT_NESTED}`),
-    ];
+    this.#panelElements = [...this.#element.querySelectorAll<HTMLElement>(`${panel}${NOT_NESTED}`)];
 
     const { length } = this.#panelElements;
 
@@ -178,7 +174,7 @@ export class Tabs {
     this.#tabElements.length = 0;
     this.#contentElement = null;
     this.#panelElements.length = 0;
-    this.#rootElement.removeAttribute('data-tabs-initialized');
+    this.#element.removeAttribute('data-tabs-initialized');
   }
 
   #initialize(): void {
@@ -279,7 +275,7 @@ export class Tabs {
       }
     }
 
-    this.#rootElement.setAttribute('data-tabs-initialized', '');
+    this.#element.setAttribute('data-tabs-initialized', '');
   }
 
   #onTabClick = (event: MouseEvent): void => {
@@ -321,7 +317,7 @@ export class Tabs {
       }
     }
 
-    this.#rootElement.removeAttribute('data-tabs-animating');
+    this.#element.removeAttribute('data-tabs-animating');
   }
 
   #onPanelBeforeMatch = (event: Event): void => {
@@ -351,7 +347,7 @@ export class Tabs {
     }
 
     const size = this.#contentElement.offsetHeight;
-    this.#rootElement.setAttribute('data-tabs-animating', '');
+    this.#element.setAttribute('data-tabs-animating', '');
     const { style } = this.#contentElement;
     style.setProperty('overflow', 'clip');
     const { crossfade, fade } = this.#settings.animation.content;

@@ -1,17 +1,17 @@
 import type { TabsOptions as Options } from './types';
 
 export class Indicator {
-  #rootElement: HTMLElement;
+  #element: HTMLElement;
   #settings: Options;
   #listElement: HTMLElement | null = null;
   #animation: Animation | null = null;
   #resizeObserver: ResizeObserver | null = null;
   #mutationObserver: MutationObserver | null = null;
 
-  constructor(root: HTMLElement, settings: Options) {
-    this.#rootElement = root;
+  constructor(element: HTMLElement, settings: Options) {
+    this.#element = element;
     this.#settings = settings;
-    this.#listElement = root.closest(settings.selector.list);
+    this.#listElement = element.closest(settings.selector.list);
 
     if (!this.#listElement) {
       return;
@@ -27,7 +27,7 @@ export class Indicator {
   }
 
   #update = (): void => {
-    if (!this.#rootElement.checkVisibility()) {
+    if (!this.#element.checkVisibility()) {
       return;
     }
 
@@ -47,7 +47,7 @@ export class Indicator {
     const { x: tx, y: ty, width: tw, height: th } = tab.getBoundingClientRect();
     const { x: lx, y: ly } = this.#listElement.getBoundingClientRect();
     const { duration, easing } = this.#settings.animation.indicator;
-    this.#animation = this.#rootElement.animate(
+    this.#animation = this.#element.animate(
       {
         [position]: `${isHorizontal ? tx - lx : ty - ly}px`,
         [size]: `${isHorizontal ? tw : th}px`,
